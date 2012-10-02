@@ -25,5 +25,5 @@ Make sure to have the filter also flag it as spam and delete it.
 
 If you actually use any of the companies in this list, you might want to do two things...
 
-1) Remove them from your filter
-2) Think about using a different recruitment company that doesn't spam people.
+1. Remove them from your filter
+2. Think about using a different recruitment company that doesn't spam people.
