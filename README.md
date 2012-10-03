@@ -20,13 +20,21 @@ Install the Canned Response plugin from Google Labs, create a new filter in your
     mistake and you are actually someone I work with on our recruitment needs
     then you'll have my mobile number, give me a call to let me know.
 
-    Bye.
+    If you're wondering what this is all about, have a look here:
+
+    https://github.com/drcongo/spammy-recruiters
+
 
 Make sure to have the filter also flag it as spam and delete it.
 
-##  And finally ##
+###  And finally ###
 
 If you actually use any of the companies in this list, you might want to do two things...
 
 1. Remove them from your filter
 2. Think about using a different recruitment company that doesn't spam people.
+
+#### To do ####
+
+1. Web interface for people not familiar with Git
+2. Automatic subscription to the filter?
