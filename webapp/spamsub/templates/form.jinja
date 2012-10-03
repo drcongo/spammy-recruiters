@@ -1,0 +1,25 @@
+        <form id="SpammerForm" method="POST" action="{{ url_for('index') }}">
+            <fieldset>
+            <legend>Add a recruiter's address to our shared database</legend>
+            <div>
+                {{ form.csrf_token }}
+                {{ form.address.label }} {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus",required="required") }}
+                <span class="help-block">(Your entry must begin with an "@")</span>
+                {{ form.submit(class="btn", value="Tell us") }}
+            </div>
+            </fieldset>
+            {% if form.errors %}
+            <legend>
+                {% if legend %}
+                    <span class="text-info">{{ legend }}</span>
+                {% else %}There was a problem</legend>
+                    <ul class="errors">
+                    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                        {% for error in field_errors %}
+                            <li>{{ form[field_name].label }} <span class="text-error">{{ error }}</span></li>
+                        {% endfor %}
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </form>
