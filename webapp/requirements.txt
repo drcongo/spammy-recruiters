@@ -21,3 +21,4 @@ PyYAML==3.10
 yuicompressor==2.4.7
 gunicorn==0.14.6
 GitPython==0.3.2.RC1
+requests==0.14.1

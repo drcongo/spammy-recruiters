@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# n0k …
 
 from fabric.api import env, run, local, require, cd, put
 from fabric.decorators import task
@@ -38,14 +37,6 @@ def shell():
     """
     with cd(env.basename):
         local('export SPAMSUB_CONFIGURATION=`pwd`/spamsub/config/dev.py && venv/bin/ipython -i -c "%run shell.py"')
-
-
-# @task
-# def deploy():
-#     with cd('CDP/glyph'):
-#         run('git pull')
-#         # run('venv/bin/alembic upgrade head')
-#         # touch run.wsgi
 
 
 # Alembic stuff. See http://alembic.readthedocs.org/en/latest/api.html

@@ -16,7 +16,7 @@ def index():
         if form.validate_on_submit():
             if not utils.check_if_exists(form.address):
                 # process the address
-                # send back thank you JSON, and a blank form
+                # send back thank you, and a blank form
                 new_form = SpammerForm()
                 # abuse the form error functionality a bit
                 new_form._errors = {
