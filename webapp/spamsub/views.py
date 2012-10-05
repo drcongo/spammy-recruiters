@@ -8,6 +8,7 @@ import utils
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """ Index page """
+    count = Address.query.count()
     form = SpammerForm()
     if request.method == 'POST' and request.is_xhr:
         # put request vars into a form and try to validate
@@ -40,4 +41,4 @@ def index():
             new_form._errors = form.errors
             return render_template('form.jinja', form=new_form)
     # GET, just render a page with a blank form
-    return render_template('index.jinja', form=form)
+    return render_template('index.jinja', form=form, count=count)
