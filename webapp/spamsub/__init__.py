@@ -18,7 +18,12 @@ import spamsub.views
 import spamsub.models
 
 app.config.from_pyfile('config/common.py')
-app.config.from_pyfile('config/sensitive.py')
+# actual CSRF secret key and github token go in here
+try:
+    app.config.from_pyfile('config/sensitive.py')
+except IOError:
+    pass
+
 
 if os.getenv('SPAMSUB_CONFIGURATION'):
     app.config.from_envvar('SPAMSUB_CONFIGURATION')
