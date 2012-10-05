@@ -20,7 +20,7 @@ def check_if_exists(address):
     Check whether a submitted address exists in the DB, add it if not,
     re-generate the spammers.txt file, and open a pull request with the updates
     """
-    normalised = address.lower().trim()
+    normalised = address.lower().strip()
     try:
         _ = Address.query.filter_by(address=normalised).one()
     except NoResultFound:
@@ -39,7 +39,7 @@ def write_new_spammers():
     origin.pull('master')
     their_spammers = set(get_spammers())
     # add any missing spammers to our DB
-    our_spammers = set([addr.address for addr in 
+    our_spammers = set([addr.address.strip() for addr in
         Address.query.order_by('address').all()])
     to_update = [Address(address=new_addr) for new_addr in
         list(their_spammers - our_spammers)]
@@ -52,12 +52,12 @@ def write_new_spammers():
         f.write(updated_spammers)
         # files under version control should end with a newline
         f.write(" \n")
-    # add spammers.txt to local repo and commit
+    # add spammers.txt to local repo
     index = repo.index
-    their_sha = repo.head.commit.hexsha
+    their_sha = 'master'
     index.add(['spammers.txt'])
     commit = index.commit("Updating Spammers on %s" % now)
-    our_sha = repo.head.commit.hexsha
+    our_sha = "urschrei:master"
     # push local repo to webapp's remote
     our_remote = repo.remotes.our_remote
     our_remote.push('master')
@@ -72,10 +72,7 @@ def get_spammers():
     # FIXME: this is a bit fragile
     cleaned = list()
     for spammer in spammers:
-        if spammer[-4:] == "OR \n":
-            cleaned.append(spammer[:-5])
-        else:
-            cleaned.append(spammer[:-1])
+        cleaned.append(spammer.split()[0])
     return cleaned
 
 def pull_request(our_sha, their_sha):
