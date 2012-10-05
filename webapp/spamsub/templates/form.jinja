@@ -3,7 +3,7 @@
             <legend>Add a recruiter's address to our shared database</legend>
             <div>
                 {{ form.csrf_token }}
-                {{ form.address.label }} {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus",required="required") }}
+                {{ form.address.label }} {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus",pattern="^@[\w\-.]*\.[a-z]{2,4}$",required="required") }}
                 <span class="help-block">(Your entry must begin with an "@")</span>
                 {{ form.submit(class="btn", value="Tell us") }}
             </div>
