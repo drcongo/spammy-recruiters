@@ -7,11 +7,13 @@
                 {{ form.submit(class="btn", value="Tell us") }}
             </div>
             </fieldset>
+            {% if message %}
+                <div><h2>{{ message }}</h2></div>
+            {% endif %}
             {% if form.errors %}
             <legend>
-                {% if legend %}
-                    <span class="text-info">{{ legend }}</span>
-                {% else %}There was a problem</legend>{% endif %}
+                There was a problem
+            </legend>
                     <ul class="errors">
                     {% for field_name, field_errors in form.errors|dictsort if field_errors %}
                         {% for error in field_errors %}

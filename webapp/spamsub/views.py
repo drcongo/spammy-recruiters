@@ -17,24 +17,19 @@ def index():
         if form.validate_on_submit():
             if not utils.check_if_exists(form.address):
                 # process the address
-                # send back thank you, and a blank form
+                # send back thank you, and a new form
                 new_form = SpammerForm()
-                # abuse the form error functionality a bit
-                new_form._errors = {
-                    'address': [u"Not really an error"]}
                 return render_template(
                     'form.jinja',
                     form=new_form,
-                    legend="Thanks!")
+                    message="Thanks!")
             else:
-                # address exists, send back an error
+                # address exists, send back an error and a new form
                 new_form = SpammerForm()
-                new_form._errors = {
-                    'address': [u"That address already exists."]}
                 return render_template(
                     'form.jinja',
                     form=new_form,
-                    legend="We already know that spammer!")
+                    message="We already know that spammer!")
         else:
             # Validation error
             new_form = SpammerForm()
