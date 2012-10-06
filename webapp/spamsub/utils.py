@@ -32,12 +32,7 @@ def check_if_exists(address):
 def write_new_spammers():
     """ Synchronise all changes between GitHub and webapp """
     # pull changes from main remote into local
-    repo = Repo(os.path.join(basename, "git_dir"))
-    git = repo.git
-    origin = repo.remotes.origin
-    origin.pull('master')
-    # make sure our file is the correct, clean version
-    git.checkout("spammers.txt")
+    checkout()
     their_spammers = set(get_spammers())
     # add any missing spammers to our DB
     our_spammers = set(addr.address.strip() for addr in
@@ -87,3 +82,12 @@ def pull_request(our_sha, their_sha):
     return requests.post(
         "https://api.github.com/repos/drcongo/spammy-recruiters/pulls",
         data=json.dumps(payload), headers=headers)
+
+def checkout():
+    """ Check out the latest version of spammers.txt from the main repo """
+    repo = Repo(os.path.join(basename, "git_dir"))
+    git = repo.git
+    origin = repo.remotes.origin
+    origin.pull('master')
+    # make sure our file is the correct, clean version
+    git.checkout("spammers.txt")

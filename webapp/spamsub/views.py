@@ -1,5 +1,5 @@
 from spamsub import app, db
-from flask import request, render_template, make_response
+from flask import request, render_template, make_response, send_file
 from models import *
 from forms import SpammerForm
 import utils
@@ -42,3 +42,12 @@ def index():
             return render_template('form.jinja', form=new_form)
     # GET, just render a page with a blank form
     return render_template('index.jinja', form=form, count=count)
+
+@app.route('/download', methods=['GET'])
+def download():
+    """ Download the latest version of spammers.txt """
+    utils.checkout()
+    return send_file(
+        "git_dir/spammers.txt",
+        as_attachment=True,
+        attachment_filename="spammers.txt")
