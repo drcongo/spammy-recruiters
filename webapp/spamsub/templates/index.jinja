@@ -4,7 +4,7 @@
     <div class="span6">
         <h4>Placeholder Header</h4>
         {{ lipsum(n=2) }}
-        <h6>We know about <a href="https://github.com/drcongo/spammy-recruiters/blob/master/spammers.txt">{{ count }}</a> spammy UK tech recruitment companies.</h6>
+        <p><strong>We know about <span class="badge">{{ count }}</span> spammy UK tech recruitment companies.<strong></p>
         <a class="label" href="{{ url_for('download') }}">Download spammers.txt</a>
     </div>
     <div class="span6" id="FormHolder">
