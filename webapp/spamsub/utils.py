@@ -21,9 +21,7 @@ def check_if_exists(address):
     re-generate the spammers.txt file, and open a pull request with the updates
     """
     normalised = address.lower().strip()
-    try:
-        _ = Address.query.filter_by(address=normalised).one()
-    except NoResultFound:
+    if not Address.query.filter_by(address=normalised).first():
         to_add = Address(address=normalised)
         db.session.add(to_add)
         db.session.commit()
@@ -32,7 +30,7 @@ def check_if_exists(address):
     return True
 
 def write_new_spammers():
-    """ Synchronise all changes between Github and webapp """
+    """ Synchronise all changes between GitHub and webapp """
     # pull changes from main remote into local
     repo = Repo(os.path.join(basename, "git_dir"))
     git = repo.git
@@ -42,8 +40,8 @@ def write_new_spammers():
     git.checkout("spammers.txt")
     their_spammers = set(get_spammers())
     # add any missing spammers to our DB
-    our_spammers = set([addr.address.strip() for addr in
-        Address.query.order_by('address').all()])
+    our_spammers = set(addr.address.strip() for addr in
+        Address.query.order_by('address').all())
     to_update = [Address(address=new_addr) for new_addr in
         list(their_spammers - our_spammers)]
     db.session.add_all(to_update)
@@ -57,14 +55,14 @@ def write_new_spammers():
         f.write(" \n")
     # add spammers.txt to local repo
     index = repo.index
-    their_sha = 'master'
     index.add(['spammers.txt'])
     commit = index.commit("Updating Spammers on %s" % now)
-    our_sha = "urschrei:master"
     # push local repo to webapp's remote
     our_remote = repo.remotes.our_remote
     our_remote.push('master')
     # send pull request to main remote
+    our_sha = "urschrei:master"
+    their_sha = 'master'
     pull_request(our_sha, their_sha)
 
 def get_spammers():
@@ -73,10 +71,7 @@ def get_spammers():
         spammers = f.readlines()
     # trim the " OR" and final newline from the entries
     # FIXME: this is a bit fragile
-    cleaned = list()
-    for spammer in spammers:
-        cleaned.append(spammer.split()[0])
-    return cleaned
+    return [spammer.split()[0] for spammer in spammers]
 
 def pull_request(our_sha, their_sha):
     """ Open a pull request on the main repo """
