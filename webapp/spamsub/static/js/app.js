@@ -12,10 +12,11 @@ $("#SpammerForm").submit(function(event) {
     /* Send the data using POST and re-generate the form w/the results */
     $.post( url, {
         address: address,
-        csrf_token: csrf },
+        csrf_token: csrf
+      },
       function(data) {
           var content = $(data);
-          $( "#SpammerForm").empty().append(content);
+          $("#SpammerForm").html(content);
           $form.find('input[name="address"]').focus();
       }
     );

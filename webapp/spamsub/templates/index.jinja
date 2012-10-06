@@ -1,4 +1,6 @@
 {% extends "base.jinja" %}
 {% block content %}
-    {% include "form.jinja" %}
+    <form id="SpammerForm" method="POST" action="{{ url_for('index') }}">
+        {% include "form.jinja" %}
+    </form>
 {% endblock %}
