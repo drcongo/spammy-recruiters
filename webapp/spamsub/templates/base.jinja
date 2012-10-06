@@ -36,18 +36,7 @@
             </div>
         </div>
         <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span6">
-                    <h4>Placeholder Header</h4>
-                    {{ lipsum(n=2) }}
-                    <h6>We know about <a href="https://github.com/drcongo/spammy-recruiters/blob/master/spammers.txt">{{ count }}</a> spammy UK tech recruitment companies.</h6>
-                </div>
-                <div class="span6" id="FormHolder">
-                    {% block content %}{% endblock %}
-                </div>
-            <div class="row-fluid">
-                    
-            </div>
+            {% block content %}{% endblock %}
         </div>
         {% assets "js_all" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
