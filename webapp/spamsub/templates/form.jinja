@@ -11,13 +11,12 @@
             <legend>
                 {% if legend %}
                     <span class="text-info">{{ legend }}</span>
-                {% else %}There was a problem</legend>
+                {% else %}There was a problem</legend>{% endif %}
                     <ul class="errors">
                     {% for field_name, field_errors in form.errors|dictsort if field_errors %}
                         {% for error in field_errors %}
-                            <li>{{ form[field_name].label }} <span class="text-error">{{ error }}</span></li>
+                            <li>{{ form[field_name].label }} <small>{{ error }}</small></li>
                         {% endfor %}
                     {% endfor %}
                     </ul>
-                {% endif %}
             {% endif %}
