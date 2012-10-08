@@ -14,27 +14,19 @@ def index():
         # put request vars into a form and try to validate
         form.address = request.form.get('address')
         form.csrf_token = request.form.get('csrf_token')
+        new_form = SpammerForm()
         if form.validate_on_submit():
             if not utils.check_if_exists(form.address):
                 # process the address
                 # send back thank you, and a new form
-                new_form = SpammerForm()
                 flash(u"Thanks!", "text-success")
-                return render_template(
-                    'form.jinja',
-                    form=new_form)
             else:
                 # address exists, send back an error and a new form
-                new_form = SpammerForm()
                 flash(u"We already know that spammer!", "text-error")
-                return render_template(
-                    'form.jinja',
-                    form=new_form)
         else:
             # Validation error
-            new_form = SpammerForm()
             new_form._errors = form.errors
-            return render_template('form.jinja', form=new_form)
+        return render_template('form.jinja', form=new_form)
     # GET, just render a page with a blank form
     return render_template('index.jinja', form=form, count=count)
 
