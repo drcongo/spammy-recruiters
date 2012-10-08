@@ -7,9 +7,15 @@
                 {{ form.submit(class="btn", value="Tell us") }}
             </div>
             </fieldset>
-            {% if message %}
-                <div><h2>{{ message }}</h2></div>
-            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div>
+                    {% for category, message in messages %}
+                        <h4 class="{{ category }}">{{ message }}</h4>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
             {% if form.errors %}
             <legend>
                 There was a problem

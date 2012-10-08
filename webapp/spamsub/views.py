@@ -1,5 +1,5 @@
 from spamsub import app, db
-from flask import request, render_template, make_response, send_file
+from flask import request, flash, render_template, make_response, send_file
 from models import *
 from forms import SpammerForm
 import utils
@@ -19,17 +19,17 @@ def index():
                 # process the address
                 # send back thank you, and a new form
                 new_form = SpammerForm()
+                flash(u"Thanks!", "text-success")
                 return render_template(
                     'form.jinja',
-                    form=new_form,
-                    message="Thanks!")
+                    form=new_form)
             else:
                 # address exists, send back an error and a new form
                 new_form = SpammerForm()
+                flash(u"We already know that spammer!", "text-error")
                 return render_template(
                     'form.jinja',
-                    form=new_form,
-                    message="We already know that spammer!")
+                    form=new_form)
         else:
             # Validation error
             new_form = SpammerForm()
