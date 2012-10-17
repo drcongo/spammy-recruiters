@@ -33,7 +33,6 @@ def index():
 @app.route('/download', methods=['GET'])
 def download():
     """ Download the latest version of spammers.txt """
-    utils.checkout()
     utils.update_db()
     return send_file(
         "git_dir/spammers.txt",

@@ -26,6 +26,8 @@ def check_if_exists(address):
     re-generate the spammers.txt file, and open a pull request with the updates
     """
     normalised = address.lower().strip()
+    # add any missing spammers to our DB
+    update_db()
     if not Address.query.filter_by(address=normalised).first():
         to_add = Address(address=normalised)
         db.session.add(to_add)
@@ -40,10 +42,6 @@ def check_if_exists(address):
 def write_new_spammers():
     """ Synchronise all changes between GitHub and webapp """
     if ok_to_update():
-        # pull changes from main remote into local
-        checkout()
-        # add any missing spammers to our DB
-        update_db()
         # re-generate spammers.txt
         with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
             updated_spammers = " OR \n".join([addr.address for
@@ -103,6 +101,8 @@ def checkout():
 
 def update_db():
     """ Add any missing spammers to our app DB """
+    # pull changes from main remote into local
+    checkout()
     their_spammers = set(get_spammers())
     our_spammers = set(addr.address.strip() for addr in
         Address.query.order_by('address').all())
