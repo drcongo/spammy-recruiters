@@ -1,10 +1,6 @@
 from spamsub import db
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import func
-
-Base = declarative_base()
 
 
 class SpamsubMixin(object):
