@@ -32,3 +32,18 @@ class Address(db.Model, SpamsubMixin):
 
     def __init__(self, address):
         self.address = address
+
+
+class Counter(db.Model, SpamsubMixin):
+    """
+    Counter table
+    """
+    count = db.Column(db.Integer(), nullable=False, unique=True)
+    timestamp = db.Column(
+        db.TIMESTAMP,
+        nullable=False,
+        default=func.now())
+
+    def __init__(self, count):
+        assert count >= 0
+        self.count = count
