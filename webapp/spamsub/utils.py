@@ -42,14 +42,8 @@ def write_new_spammers():
     if ok_to_update():
         # pull changes from main remote into local
         checkout()
-        their_spammers = set(get_spammers())
         # add any missing spammers to our DB
-        our_spammers = set(addr.address.strip() for addr in
-            Address.query.order_by('address').all())
-        to_update = [Address(address=new_addr) for new_addr in
-            list(their_spammers - our_spammers)]
-        db.session.add_all(to_update)
-        db.session.commit()
+        update_db()
         # re-generate spammers.txt
         with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
             updated_spammers = " OR \n".join([addr.address for
@@ -106,3 +100,13 @@ def checkout():
     origin.pull('master')
     # make sure our file is the correct, clean version
     git.checkout("spammers.txt")
+
+def update_db():
+    """ Add any missing spammers to our app DB """
+    their_spammers = set(get_spammers())
+    our_spammers = set(addr.address.strip() for addr in
+        Address.query.order_by('address').all())
+    to_update = [Address(address=new_addr) for new_addr in
+        list(their_spammers - our_spammers)]
+    db.session.add_all(to_update)
+    db.session.commit()
