@@ -1,8 +1,8 @@
 <fieldset>
-<legend>Add a recruiter's address to our shared database</legend>
+<h4>Add a recruiter's address to our shared database</h4>
 <div>
     {{ form.csrf_token }}
-    {{ form.address.label }} {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus", pattern="^@[\w\-.]*\.[a-z]{2,4}$",required="required") }}
+    {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus", pattern="^@[\w\-.]*\.[a-z]{2,4}$",required="required") }}
     <span class="help-block">(Your entry must begin with an "@")</span>
     {{ form.submit(class="btn", value="Tell us") }}
 </div>
