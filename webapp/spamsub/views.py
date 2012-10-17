@@ -34,6 +34,7 @@ def index():
 def download():
     """ Download the latest version of spammers.txt """
     utils.checkout()
+    utils.update_db()
     return send_file(
         "git_dir/spammers.txt",
         as_attachment=True,
