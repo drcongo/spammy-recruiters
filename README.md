@@ -8,6 +8,10 @@ So let’s keep a collaborative list of the companies that spam us in a format r
 
 If you do get involved, please have a look at the [contributing guidelines](https://github.com/drcongo/spammy-recruiters/blob/master/CONTRIBUTING.md "contributing guidelines"). Thanks.
 
+## Note ##
+
+This list is now too long to fit into a single Gmail filter, so you'll probably want to create two. One for a to m, and another for n to z.
+
 ## Protip ##
 
 Install the Canned Response plugin from Google Labs, create a new filter in your Gmail / Google Apps, paste this list into the From field, and set Gmail to automatically reply with something like this:
