@@ -10,6 +10,7 @@ from flask.ext.wtf import (
     )
 import re
 
+
 reg = re.compile(r"^@[\w\-.]*\.[a-z]{2,4}$")
 
 
