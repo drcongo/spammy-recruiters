@@ -11,25 +11,28 @@
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div>
-        {% for category, message in messages %}
-            <h4 class="{{ category }}">{{ message }}</h4>
-        {% endfor %}
+        <div id="thanks">
+            <fieldset>
+                <legend>Thanks!</legend>
+                {% for category, message in messages %}
+                    <h4 class="{{ category }}">{{ message }}</h4>
+                {% endfor %}
+            </fieldset>
         </div>
     {% endif %}
 {% endwith %}
 {% if form.errors %}
-    <br><fieldset>
-        <legend>
-            <h5>There was a problem</h5>
-        </legend>
-        <ul class="errors">
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-            {% for error in field_errors %}
-                <li>{{ form[field_name].label }} <small class="text-error">{{ error }}</small></li>
+    <div>
+        <fieldset>
+            <legend>There was a problem</legend>
+            <ul class="errors">
+            {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                {% for error in field_errors %}
+                    <li>{{ form[field_name].label }} <small class="text-error">{{ error }}</small></li>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        </ul>
-        <span class="help-block">Please try doing it right, then re-submitting the address.</span>
-    </fieldset>
+            </ul>
+            <span class="help-block">Please try doing it right, then re-submitting the address.</span>
+        </fieldset>
+    </div>
 {% endif %}
