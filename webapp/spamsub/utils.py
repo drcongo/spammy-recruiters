@@ -26,7 +26,7 @@ def check_if_exists(address):
     Check whether a submitted address exists in the DB, add it if not,
     re-generate the spammers.txt file, and open a pull request with the updates
     """
-    normalised = address.lower().strip()
+    normalised = "@" + address.lower().strip()
     # add any missing spammers to our DB
     update_db()
     if not Address.query.filter_by(address=normalised).first():
