@@ -16,7 +16,7 @@ def index():
             if not utils.check_if_exists(form.address.data):
                 flash(u"Thanks!", "text-success")
             else:
-                flash(u"We already know that spammer!", "text-error")
+                flash(u"We already know %s!" % form.address.data, "text-error")
     if request.is_xhr:
         # OK to send back a fragment
         return render_template('form.jinja', form=form)

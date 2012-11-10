@@ -14,7 +14,7 @@ $("#SpammerForm").submit(function(event) {
         function(data) {
             var content = $(data);
             $("#SpammerForm").html(content);
-            $form.find('input[name="address"]').focus();
+            $form.find('input[name="address"]').val("").focus();
         }
     );
 });
