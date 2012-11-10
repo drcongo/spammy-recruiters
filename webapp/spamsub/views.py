@@ -9,6 +9,7 @@ import utils
 def index():
     """ Index page """
     count = Address.query.count()
+    latest = utils.sync_check()
     form = SpammerForm()
     # try to validate, and check for AJAX submission
     if form.validate_on_submit():
@@ -20,7 +21,7 @@ def index():
         # OK to send back a fragment
         return render_template('form.jinja', form=form)
     # GET or no JS, so render a full page
-    return render_template('index.jinja', form=form, count=count)
+    return render_template('index.jinja', form=form, count=count, latest=latest)
 
 @app.route('/download', methods=['GET'])
 def download():
