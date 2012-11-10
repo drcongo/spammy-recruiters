@@ -15,6 +15,7 @@ $("#SpammerForm").submit(function(event) {
             var content = $(data);
             $("#SpammerForm").html(content);
             $form.find('input[name="address"]').val("").focus();
+            $("#thanks").delay(5000).fadeOut(500);
         }
     );
 });
