@@ -30,8 +30,7 @@ def check_if_exists(address):
     # add any missing spammers to our DB
     update_db()
     if not Address.query.filter_by(address=normalised).first():
-        to_add = Address(address=normalised)
-        db.session.add(to_add)
+        db.session.add(Address(address=normalised))
         count = Counter.query.first()
         count.count += 1
         db.session.add(count)
