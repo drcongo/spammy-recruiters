@@ -6,7 +6,9 @@
         <span class="add-on">@</span>
         {{ form.address(placeholder="spammyrecruiter.co.uk", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$",required="required") }}
     </div>
-    <br>{{ form.submit(class="btn", value="Tell us") }}
+    <div>
+        {{ form.submit(class="btn", value="Tell us") }}
+    </div>
 </div>
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
