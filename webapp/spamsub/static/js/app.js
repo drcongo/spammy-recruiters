@@ -16,6 +16,7 @@ $("#SpammerForm").submit(function(event) {
             $("#SpammerForm").html(content);
             $form.find('input[name="address"]').val("").focus();
             $("#thanks").delay(5000).fadeOut(500);
+            $("#errors").delay(10000).fadeOut(750);
         }
     );
 });
