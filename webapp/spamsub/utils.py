@@ -3,9 +3,9 @@
 Utility functions for interacting with our Git repos
 """
 from spamsub import app
-import datetime
+from datetime import datetime
 import json
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from models import *
 from git import Repo
 import requests
@@ -13,7 +13,7 @@ import os
 
 
 basename = os.path.dirname(__file__)
-now = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
 
 def ok_to_update():
     """ If we've got more than two new addresses, or a day's gone by """
@@ -26,12 +26,11 @@ def check_if_exists(address):
     Check whether a submitted address exists in the DB, add it if not,
     re-generate the spammers.txt file, and open a pull request with the updates
     """
-    normalised = address.lower().strip()
+    normalised = "@" + address.lower().strip()
     # add any missing spammers to our DB
     update_db()
     if not Address.query.filter_by(address=normalised).first():
-        to_add = Address(address=normalised)
-        db.session.add(to_add)
+        db.session.add(Address(address=normalised))
         count = Counter.query.first()
         count.count += 1
         db.session.add(count)
@@ -110,4 +109,19 @@ def update_db():
     to_update = [Address(address=new_addr) for new_addr in
         list(their_spammers - our_spammers)]
     db.session.add_all(to_update)
+    # reset sync timestamp
+    latest = UpdateCheck.query.first()
+    latest.timestamp = func.now()
+    db.session.add(latest)
     db.session.commit()
+
+def sync_check():
+    """
+    Syncing the local and remote repos is a relatively slow process;
+    there's no need to do it more than once per hour, really
+    """
+    latest = UpdateCheck.query.first()
+    elapsed = datetime.now() - latest.timestamp 
+    if elapsed.seconds > 3600:
+        update_db()
+    return latest.timestamp.strftime("%x, at %X")

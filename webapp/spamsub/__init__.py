@@ -10,6 +10,11 @@ from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment
 from webassets.loaders import YAMLLoader
+import locale
+
+
+# set our locale data from the POSIX variable
+locale.setlocale(locale.LC_ALL, '')
 
 app = Flask(__name__)
 # attach DB
