@@ -3,6 +3,7 @@ Fabric==1.4.3
 Flask==0.9
 Flask-Assets==0.7
 Flask-SQLAlchemy==0.16
+Flask-Testing==0.4
 Flask-WTF==0.8
 Jinja2==2.6
 Mako==0.7.2
