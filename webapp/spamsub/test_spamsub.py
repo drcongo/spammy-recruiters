@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask.ext.testing import TestCase
 from spamsub import app as ss
 from spamsub import db
@@ -20,9 +21,11 @@ class MyTest(TestCase):
 
         db.create_all()
         # add an initial timestamp, address, and update count
-        db.session.add(UpdateCheck())
-        db.session.add(Address(address="@test-address.com"))
-        db.session.add(Counter(count=0))
+        db.session.add_all([
+            UpdateCheck(),
+            Address(address="@test-address.com"),
+            Counter(count=0)
+            ])
         db.session.commit()
 
     def tearDown(self):
@@ -33,7 +36,7 @@ class MyTest(TestCase):
     # Actual tests start here
 
     def test_address_exists(self):
-        """ Passes if we get the "We already know about … though message """ 
+        """ Passes if we get the "We already know about … though" message """ 
         response = self.client.post('/', data=dict(address='test-address.com'))
         assert 'though' in response.data
 
