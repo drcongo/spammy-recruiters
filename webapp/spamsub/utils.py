@@ -18,7 +18,7 @@ now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
 def ok_to_update():
     """ If we've got more than two new addresses, or a day's gone by """
     counter = Counter.query.first()
-    elapsed = counter.timestamp - datetime.datetime.now()
+    elapsed = counter.timestamp - datetime.now()
     return any([counter.count >= 2, elapsed.days >= 1])
 
 def check_if_exists(address):

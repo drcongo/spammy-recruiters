@@ -1,6 +1,7 @@
 from spamsub import db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import func
+from sqlalchemy.orm import validates
 
 
 class SpamsubMixin(object):
@@ -41,8 +42,15 @@ class Counter(db.Model, SpamsubMixin):
         default=func.now())
 
     def __init__(self, count):
-        assert count >= 0
         self.count = count
+
+    @validates('count')
+    def validate_count(self, key, count):
+        try:
+            assert count >= 0
+        except AssertionError:
+            count = 0
+        return count
 
 class UpdateCheck(db.Model, SpamsubMixin):
     """ Update check timestamp """
