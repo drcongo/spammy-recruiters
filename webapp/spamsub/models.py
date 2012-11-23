@@ -43,3 +43,13 @@ class Counter(db.Model, SpamsubMixin):
     def __init__(self, count):
         assert count >= 0
         self.count = count
+
+class UpdateCheck(db.Model, SpamsubMixin):
+    """ Update check timestamp """
+    timestamp = db.Column(
+        db.TIMESTAMP,
+        nullable=False,
+        default=func.now())
+
+    def __init__(self):
+        self.timestamp = func.now()

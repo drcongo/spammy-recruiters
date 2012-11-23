@@ -2,29 +2,39 @@
 <h4>Add a recruiter's address to our shared database</h4>
 <div>
     {{ form.csrf_token }}
-    {{ form.address(placeholder="@spammyrecruiter.co.uk", autofocus="autofocus", pattern="^@[\w\-.]*\.[a-z]{2,4}$",required="required") }}
-    <span class="help-block">(Your entry must begin with an "@")</span>
-    {{ form.submit(class="btn", value="Tell us") }}
+    <div class="input-prepend">
+        <span class="add-on">@</span>
+        {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$",required="required") }}
+    </div>
+    <div>
+        {{ form.submit(class="btn", value="Tell us") }}
+    </div>
 </div>
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div>
-        {% for category, message in messages %}
-            <h4 class="{{ category }}">{{ message }}</h4>
-        {% endfor %}
+        <div id="thanks">
+            <fieldset>
+                <legend>Thanks!</legend>
+                {% for category, message in messages %}
+                    <h4 class="{{ category }}">{{ message }}</h4>
+                {% endfor %}
+            </fieldset>
         </div>
     {% endif %}
 {% endwith %}
 {% if form.errors %}
-<legend>
-    There was a problem
-</legend>
-        <ul class="errors">
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-            {% for error in field_errors %}
-                <li>{{ form[field_name].label }} <small>{{ error }}</small></li>
+    <div id="errors">
+        <fieldset>
+            <legend>There was a problem</legend>
+            <ul class="errors">
+            {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                {% for error in field_errors %}
+                    <li>{{ form[field_name].label }} <small class="text-error">{{ error }}</small></li>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        </ul>
+            </ul>
+            <span class="help-block">Please try doing it right, then re-submitting the address.</span>
+        </fieldset>
+    </div>
 {% endif %}
