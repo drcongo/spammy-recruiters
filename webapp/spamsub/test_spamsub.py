@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+
+
 from flask.ext.testing import TestCase
 from spamsub import app as ss
 from spamsub import db
 from spamsub.models import *
+from spamsub.utils import *
+from datetime import timedelta
+
 
 class MyTest(TestCase):
     """ TestCase Flask extension class """
@@ -44,3 +49,25 @@ class MyTest(TestCase):
         """ Passes if we add the POSTed address to the db """
         response = self.client.post('/', data=dict(address='new-address.com'))
         assert 'added' in response.data
+
+    def test_ok_to_update_counter(self):
+        """ Should pass because we have more than two new addresses """
+        ctr = Counter.query.first()
+        ctr.count += 2
+        db.session.add(ctr)
+        db.session.commit()
+        assert ok_to_update()
+
+    def test_ok_to_update_date(self):
+        """ Should pass because more than a day has passed """
+        ctr = Counter.query.first()
+        ctr.timestamp = ctr.timestamp + timedelta(days=1, seconds=1)
+        db.session.add(ctr)
+        db.session.commit()
+        assert ok_to_update()
+
+    def test_ok_to_update_fails(self):
+        """ Should fail because the counter's zero, and < 24 hours old """
+        assert not ok_to_update()
+
+
