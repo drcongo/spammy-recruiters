@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import func
 from sqlalchemy.orm import validates
 
+# auto-generated index names use the ix_table_column naming convention
 
 class SpamsubMixin(object):
     """
@@ -21,7 +22,11 @@ class Address(db.Model, SpamsubMixin):
     """
     Address table
     """
-    address = db.Column(db.String(250), nullable=False, unique=True)
+    address = db.Column(
+        db.String(250),
+        nullable=False,
+        unique=True,
+        index=True)
     timestamp = db.Column(
         db.TIMESTAMP,
         nullable=False,
@@ -35,7 +40,11 @@ class Counter(db.Model, SpamsubMixin):
     """
     Counter table
     """
-    count = db.Column(db.Integer(), nullable=False, unique=True)
+    count = db.Column(
+        db.Integer(),
+        nullable=False,
+        unique=True,
+        index=True)
     timestamp = db.Column(
         db.TIMESTAMP,
         nullable=False,
