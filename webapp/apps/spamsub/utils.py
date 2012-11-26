@@ -2,7 +2,7 @@
 """
 Utility functions for interacting with our Git repos
 """
-from spamsub import app
+from webapp import app
 from datetime import datetime
 import json
 from sqlalchemy import func, desc

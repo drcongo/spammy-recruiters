@@ -27,7 +27,7 @@ def run_app():
     with cd(env.basename):
         # clean up any *.pyc files in our app dir
         # local('rm spamsub/*.pyc')
-        local('export SPAMSUB_CONFIGURATION=`pwd`/spamsub/config/dev.py && venv/bin/python ./run.py')
+        local('export SPAMSUB_CONFIGURATION=`pwd`/config/dev.py && venv/bin/python ./run.py')
 
 
 @task
@@ -36,7 +36,7 @@ def shell():
     Run iPython without the deprecated Werkzeug stuff
     """
     with cd(env.basename):
-        local('export SPAMSUB_CONFIGURATION=`pwd`/spamsub/config/dev.py && venv/bin/ipython -i -c "%run shell.py"')
+        local('export SPAMSUB_CONFIGURATION=`pwd`/config/dev.py && venv/bin/ipython -i -c "%run shell.py"')
 
 
 # Alembic stuff. See http://alembic.readthedocs.org/en/latest/api.html

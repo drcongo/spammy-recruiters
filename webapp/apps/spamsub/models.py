@@ -1,4 +1,4 @@
-from spamsub import db
+from webapp import app, db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import func
 from sqlalchemy.orm import validates

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" Spamsub main site """
+""" main site """
 
 import os
 
@@ -19,8 +19,7 @@ locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
 # attach DB
 db = SQLAlchemy(app)
-import spamsub.views
-import spamsub.models
+
 
 app.config.from_pyfile('config/common.py')
 # actual CSRF secret key and github token go in here
@@ -48,9 +47,9 @@ for bundle_name, bundle in bundles.items():
     assets.register(bundle_name, bundle)
 
 ## import our own blueprints here if necessary
-# from apps.foo.views import foo_app
+from apps.spamsub.views import spamsub
 # attach any blueprints
-# app.register_blueprint(foo_app, url_prefix='/foo')
+app.register_blueprint(spamsub, url_prefix='/')
 
 
 # Error handling

@@ -1,11 +1,16 @@
-from spamsub import app, db
-from flask import request, flash, render_template, send_file
+import os
+from flask import Blueprint, request, flash, render_template, send_file
 from models import *
 from forms import SpammerForm
 import utils
 
+spamsub = Blueprint(
+    'spamsub',
+    __name__,
+    template_folder='templates'
+    )
 
-@app.route('/', methods=['GET', 'POST'])
+@spamsub.route('/', methods=['GET', 'POST'])
 def index():
     """ Index page """
     count = Address.query.count()
@@ -27,11 +32,11 @@ def index():
     # GET or no JS, so render a full page
     return render_template('index.jinja', form=form, count=count, latest=latest)
 
-@app.route('/download', methods=['GET'])
+@spamsub.route('download', methods=['GET'])
 def download():
     """ Download the latest version of spammers.txt """
     utils.update_db()
     return send_file(
-        "git_dir/spammers.txt",
+        os.path.join(utils.basename, "git_dir/spammers.txt"),
         as_attachment=True,
         attachment_filename="spammers.txt")
