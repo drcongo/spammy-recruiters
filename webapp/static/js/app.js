@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    /* meddle with the tab order, because I like this better */
     $("#recaptcha_parent").show("slow");
     $("#recaptcha_response_field").attr('tabindex', 0);
     $("#recaptcha_reload_btn").attr('tabindex', 1);
@@ -10,13 +11,14 @@ $(document).ready(function() {
 function new_recaptcha(){
     /* render a new recaptcha when the form is re-rendered via AJAX */
     $('#recaptcha_parent').toggle();
-    Recaptcha.create("6LdLmtkSAAAAAMhQTQOq2zRvnSLeVDyLESrd59Kb",
-    "recaptcha",
-    {
-        theme: "clean",
-        tabindex: 1,
-        callback: function(){$("#recaptcha_parent").show("slow");}
-    }
+    Recaptcha.create(
+        $RECAPTCHA_PUBLIC_KEY,
+        "recaptcha",
+        {
+            theme: "clean",
+            tabindex: 1,
+            callback: function(){$("#recaptcha_parent").show("slow");}
+        }
     );
 }
 

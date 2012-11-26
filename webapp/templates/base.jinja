@@ -13,6 +13,9 @@
         {% assets "bootstrap_responsive" %}
             <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
         {% endassets %}
+        <script type=text/javascript>
+            $RECAPTCHA_PUBLIC_KEY = "{{ recaptcha_public_key|safe }}";
+        </script>
         <!--[if lt IE 9]>
         {% assets "html5shim" %}
             <script src="{{ ASSET_URL }}"></script>

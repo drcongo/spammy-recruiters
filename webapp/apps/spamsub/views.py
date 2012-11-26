@@ -1,8 +1,9 @@
 import os
-from flask import Blueprint, request, flash, render_template, send_file
+from flask import Blueprint, request, flash, render_template, send_file, jsonify
 from models import *
 from forms import SpammerForm
 import utils
+import json
 
 spamsub = Blueprint(
     'spamsub',
@@ -28,9 +29,17 @@ def index():
                     "text-success")
     if request.is_xhr:
         # OK to send back a fragment
-        return render_template('form.jinja', form=form)
+        return render_template(
+            'form.jinja',
+            form=form,
+            )
     # GET or no JS, so render a full page
-    return render_template('index.jinja', form=form, count=count, latest=latest)
+    return render_template(
+        'index.jinja',
+        form=form,
+        count=count,
+        latest=latest,
+        recaptcha_public_key=app.config['RECAPTCHA_PUBLIC_KEY'])
 
 @spamsub.route('download', methods=['GET'])
 def download():
