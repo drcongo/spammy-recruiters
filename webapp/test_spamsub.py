@@ -2,10 +2,10 @@
 
 
 from flask.ext.testing import TestCase
-from spamsub import app as ss
-from spamsub import db
-from spamsub.models import *
-from spamsub.utils import *
+from webapp import app as ss
+from webapp import db
+from webapp.apps.spamsub.models import *
+from webapp.apps.spamsub.utils import *
 from datetime import timedelta
 
 
