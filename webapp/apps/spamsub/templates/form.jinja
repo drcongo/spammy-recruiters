@@ -4,7 +4,12 @@
     {{ form.csrf_token }}
     <div class="input-prepend">
         <span class="add-on">@</span>
-        {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$",required="required") }}
+        {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$", required="required")}}
+    </div>
+    <div id="recaptcha_parent" style="display: none;">
+        <div id="recaptcha">
+            {{ form.recaptcha }}
+        </div>
     </div>
     <div>
         {{ form.submit(class="btn", value="Tell us") }}
