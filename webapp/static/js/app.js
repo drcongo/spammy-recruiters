@@ -52,7 +52,7 @@ $("#SpammerForm").submit(function(event) {
                 $form.find('input[name="address"]').val("").focus();
             }
             $form.find('input[name="address"]').focus();
-            $("#thanks").delay(5000).fadeOut(750);
+            $("#thanks").delay(10000).fadeOut(750);
             $("#errors").delay(10000).fadeOut(750);
             new_recaptcha();
         }
