@@ -1,9 +1,8 @@
 import os
-from flask import Blueprint, request, flash, render_template, send_file, jsonify
+from flask import Blueprint, request, flash, render_template, send_file
 from models import *
 from forms import SpammerForm
 import utils
-import json
 
 spamsub = Blueprint(
     'spamsub',
