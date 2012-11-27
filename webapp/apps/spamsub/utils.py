@@ -18,6 +18,10 @@ now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
 def ok_to_update():
     """ If we've got more than two new addresses, or a day's gone by """
     counter = Counter.query.first()
+    if not counter:
+        counter = Count(0)
+        db.session.add(counter)
+        db.session.commit()
     elapsed = counter.timestamp - datetime.now()
     return any([counter.count >= 2, elapsed.days >= 1])
 
@@ -110,7 +114,7 @@ def update_db():
         list(their_spammers - our_spammers)]
     db.session.add_all(to_update)
     # reset sync timestamp
-    latest = UpdateCheck.query.first()
+    latest = UpdateCheck.query.first() or UpdateCheck()
     latest.timestamp = func.now()
     db.session.add(latest)
     db.session.commit()
@@ -121,7 +125,11 @@ def sync_check():
     there's no need to do it more than once per hour, really
     """
     latest = UpdateCheck.query.first()
-    elapsed = datetime.now() - latest.timestamp 
+    if not latest:
+        latest = UpdateCheck()
+        db.session.add(latest)
+        db.session.commit()
+    elapsed = datetime.now() - latest.timestamp
     if elapsed.seconds > 3600:
         update_db()
     return latest.timestamp.strftime("%x, at %X")
