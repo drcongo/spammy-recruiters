@@ -1,11 +1,17 @@
-$(document).ready(function() {
-    /* meddle with the tab order, because I like this better */
-    $("#recaptcha_parent").show("fast");
+function fix_tabindexes() {
+    /* meddle with recaptcha tab indexes */
     $("#recaptcha_response_field").attr('tabindex', 0);
     $("#spam_submit").attr('tabindex', 1);
     $("#recaptcha_reload_btn").attr('tabindex', 2);
     $("#recaptcha_switch_audio_btn").attr('tabindex', 3);
     $("#recaptcha_whatsthis_btn").attr('tabindex', 4);
+}
+
+
+$(document).ready(function() {
+    /* dramatically reveal ReCaptcha and fix tab indexes */
+    $("#recaptcha_parent").show("fast");
+    fix_tabindexes();
 });
 
 
@@ -17,7 +23,10 @@ function new_recaptcha(){
         {
             theme: "clean",
             tabindex: 0,
-            callback: function(){$("#recaptcha_parent").show("slow");}
+            callback: function(){
+                $("#recaptcha_parent").show("slow");
+                fix_tabindexes();
+            }
         }
     );
 }
