@@ -6,6 +6,7 @@ from flask.ext.wtf import (
     RadioField,
     HiddenField,
     SubmitField,
+    Recaptcha,
     RecaptchaField,
     validators
     )
@@ -27,6 +28,12 @@ like this:<ul><li>Everything <em>after</em> the "@" sign, with no spaces.</li>
                 reg,
                 flags=0,
                 message=error_msg
-    )])
-    recaptcha = RecaptchaField(label=u"ReCaptcha")
+        )])
+    recaptcha = RecaptchaField(
+        label=u"ReCaptcha",
+        validators=[Recaptcha(
+            message=u"The ReCaptcha words you entered are wrong. \
+Please try again."
+        )])
+
     submit = SubmitField()
