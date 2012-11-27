@@ -1,22 +1,22 @@
 $(document).ready(function() {
     /* meddle with the tab order, because I like this better */
-    $("#recaptcha_parent").show("slow");
+    $("#recaptcha_parent").show("fast");
     $("#recaptcha_response_field").attr('tabindex', 0);
-    $("#recaptcha_reload_btn").attr('tabindex', 1);
-    $("#recaptcha_switch_audio_btn").attr('tabindex', 2);
-    $("#recaptcha_whatsthis_btn").attr('tabindex', 3);
+    $("#spam_submit").attr('tabindex', 1);
+    $("#recaptcha_reload_btn").attr('tabindex', 2);
+    $("#recaptcha_switch_audio_btn").attr('tabindex', 3);
+    $("#recaptcha_whatsthis_btn").attr('tabindex', 4);
 });
 
 
 function new_recaptcha(){
     /* render a new recaptcha when the form is re-rendered via AJAX */
-    $('#recaptcha_parent').toggle();
     Recaptcha.create(
         $RECAPTCHA_PUBLIC_KEY,
         "recaptcha",
         {
             theme: "clean",
-            tabindex: 1,
+            tabindex: 0,
             callback: function(){$("#recaptcha_parent").show("slow");}
         }
     );
@@ -27,6 +27,7 @@ $("#SpammerForm").submit(function(event) {
     /* stop form from submitting normally */
     event.preventDefault();
     /* get some values from elements on the page */
+    $('#recaptcha_parent').toggle("fast");
     var $form = $(this),
     address = $form.find('input[name="address"]').val(),
     csrf = $form.find('input[name="csrf_token"]').val(),
@@ -43,8 +44,15 @@ $("#SpammerForm").submit(function(event) {
         function(data) {
             var content = $(data);
             $("#SpammerForm").html(content);
-            $form.find('input[name="address"]').val("").focus();
-            $("#thanks").delay(5000).fadeOut(500);
+            // only clear the address field if there are no errors
+            if ($form.find(".text-error")) {
+                $form.find('input[name="address"]').focus();
+            }
+            else {
+                $form.find('input[name="address"]').val("").focus();
+            }
+            $form.find('input[name="address"]').focus();
+            $("#thanks").delay(5000).fadeOut(750);
             $("#errors").delay(10000).fadeOut(750);
             new_recaptcha();
         }
