@@ -45,7 +45,7 @@ $("#SpammerForm").submit(function(event) {
             var content = $(data);
             $("#SpammerForm").html(content);
             // only clear the address field if there are no errors
-            if ($form.find(".text-error")) {
+            if ($("#errors").length !== 0) {
                 $form.find('input[name="address"]').focus();
             }
             else {
