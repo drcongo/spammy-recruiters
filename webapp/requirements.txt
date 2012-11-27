@@ -14,7 +14,7 @@ alembic==0.4.0
 psycopg2==2.4.5
 pycrypto==2.6
 ssh==1.7.14
-webassets==0.7
+webassets==0.9.dev
 wsgiref==0.1.2
 yolk==0.4.3
 PyYAML==3.10

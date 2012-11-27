@@ -35,6 +35,7 @@ if os.getenv('SPAMSUB_CONFIGURATION'):
 # attach assets
 assets = Environment(app)
 assets.versions = 'hash'
+assets.url = app.static_url_path
 
 manifest_path = os.path.realpath(
     os.path.join(os.path.dirname(__file__), '.static-manifest'))
