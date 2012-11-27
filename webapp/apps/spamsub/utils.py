@@ -10,6 +10,7 @@ from models import *
 from git import Repo
 import requests
 import os
+import humanize
 
 
 basename = os.path.dirname(__file__)
@@ -132,4 +133,4 @@ def sync_check():
     elapsed = datetime.now() - latest.timestamp
     if elapsed.seconds > 3600:
         update_db()
-    return latest.timestamp.strftime("%x, at %X")
+    return humanize.naturaltime(elapsed)
