@@ -3,11 +3,14 @@
 Utility functions for interacting with our Git repos
 """
 from webapp import app
+from flask import abort, flash
 from datetime import datetime
 import json
 from sqlalchemy import func, desc
 from models import *
 from git import Repo
+from git.exc import *
+from requests.exceptions import HTTPError
 import requests
 import os
 import humanize
@@ -15,6 +18,8 @@ import humanize
 
 basename = os.path.dirname(__file__)
 now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+repo = Repo(os.path.join(basename, "git_dir"))
+
 
 def ok_to_update():
     """ If we've got more than two new addresses, or a day's gone by """
@@ -37,6 +42,8 @@ def check_if_exists(address):
     if not Address.query.filter_by(address=normalised).first():
         db.session.add(Address(address=normalised))
         count = Counter.query.first()
+        if not count:
+            count = Counter(0)
         count.count += 1
         db.session.add(count)
         db.session.commit()
@@ -64,13 +71,19 @@ def write_new_spammers():
         # send pull request to main remote
         our_sha = "urschrei:master"
         their_sha = 'master'
-        pull_request(our_sha, their_sha)
-        # reset counter to 0
-        counter = Counter.query.first()
-        counter.count = 0
-        counter.timestamp = func.now()
-        db.session.add(counter)
-        db.session.commit()
+        if pull_request(our_sha, their_sha):
+            # reset counter to 0
+            counter = Counter.query.first()
+            counter.count = 0
+            counter.timestamp = func.now()
+            db.session.add(counter)
+            db.session.commit()
+        else:
+            # register an error
+            flash(
+                "There was an error sending your updates to GitHub. We'll \
+try again later, though, and they <em>have</em> been saved.", "text-error"
+                )
 
 def get_spammers():
     """ Return an up-to-date list of spammers from the main repo text file """
@@ -91,18 +104,26 @@ def pull_request(our_sha, their_sha):
     headers = {
         "Authorization": 'token %s' % app.config['GITHUB_TOKEN'],
     }
-    return requests.post(
+    req = requests.post(
         "https://api.github.com/repos/drcongo/spammy-recruiters/pulls",
         data=json.dumps(payload), headers=headers)
+    try:
+        req.raise_for_status()
+    except HTTPError:
+        return False
+
 
 def checkout():
     """ Check out the latest version of spammers.txt from the main repo """
-    repo = Repo(os.path.join(basename, "git_dir"))
     git = repo.git
     origin = repo.remotes.origin
-    origin.pull('master')
-    # make sure our file is the correct, clean version
-    git.checkout("spammers.txt")
+    try:
+        origin.pull('master')
+        # make sure our file is the correct, clean version
+        git.checkout("spammers.txt")
+    except GitCommandError:
+        # Not much point carrying on without the latest spammer file
+        abort(500)
 
 def update_db():
     """ Add any missing spammers to our app DB """
