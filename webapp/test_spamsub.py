@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+import os
 from flask.ext.testing import TestCase
 from webapp import app as ss
 from webapp import db
@@ -17,6 +18,7 @@ class MyTest(TestCase):
     def create_app(self):
 
         app = ss
+        app.config.from_pyfile(os.path.join(app.root_path, 'config/dev.py'))
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
         app.config['CSRF_ENABLED'] = False
@@ -42,12 +44,18 @@ class MyTest(TestCase):
 
     def test_address_exists(self):
         """ Passes if we get the "We already know about … though" message """ 
-        response = self.client.post('/', data=dict(address='test-address.com'))
+        response = self.client.post('/', data=dict(
+            address='test-address.com',
+            recaptcha_challenge_field='test',
+            recaptcha_response_field='test'))
         assert 'though' in response.data
 
     def test_new_address(self):
         """ Passes if we add the POSTed address to the db """
-        response = self.client.post('/', data=dict(address='new-address.com'))
+        response = self.client.post('/', data=dict(
+            address='new-address.com',
+            recaptcha_challenge_field='test',
+            recaptcha_response_field='test'))
         assert 'added' in response.data
 
     def test_ok_to_update_counter(self):
