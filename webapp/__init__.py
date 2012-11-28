@@ -60,7 +60,7 @@ Time:               %(asctime)s
 """)
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(log_format)
-    app.logger.addHandler(sys_handler)
+    app.logger.addHandler(stream_handler)
 
 # set up error handling pages
 @app.errorhandler(404)
