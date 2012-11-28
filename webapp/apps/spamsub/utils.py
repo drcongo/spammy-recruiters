@@ -4,7 +4,7 @@ Utility functions for interacting with our Git repos
 """
 from webapp import app
 from flask import abort, flash
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from sqlalchemy import func, desc
 from models import *
@@ -154,4 +154,5 @@ def sync_check():
     elapsed = datetime.now() - latest.timestamp
     if elapsed.seconds > 3600:
         update_db()
+        elapsed = datetime.now() - timedelta(seconds=1)
     return humanize.naturaltime(elapsed)
