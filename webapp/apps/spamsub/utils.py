@@ -53,6 +53,7 @@ def check_if_exists(address):
 
 def write_new_spammers():
     """ Synchronise all changes between GitHub and webapp """
+    errs = False
     if ok_to_update():
         # re-generate spammers.txt
         with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
@@ -63,15 +64,19 @@ def write_new_spammers():
             f.write(" \n")
         # add spammers.txt to local repo
         index = repo.index
-        index.add(['spammers.txt'])
-        commit = index.commit("Updating Spammers on %s" % now)
-        # push local repo to webapp's remote
-        our_remote = repo.remotes.our_remote
-        our_remote.push('master')
+        try:
+            index.add(['spammers.txt'])
+            commit = index.commit("Updating Spammers on %s" % now)
+            # push local repo to webapp's remote
+            our_remote = repo.remotes.our_remote
+            our_remote.push('master')
+        except GitCommandError as e:
+            errs = True
+            app.logger.error("Couldn't push to staging remote. Err: %s" % e)
         # send pull request to main remote
         our_sha = "urschrei:master"
         their_sha = 'master'
-        if pull_request(our_sha, their_sha):
+        if not errs and pull_request(our_sha, their_sha):
             # reset counter to 0
             counter = Counter.query.first()
             counter.count = 0
@@ -80,6 +85,8 @@ def write_new_spammers():
             db.session.commit()
         else:
             # register an error
+            errs = True
+        if errs:
             flash(
                 "There was an error sending your updates to GitHub. We'll \
 try again later, though, and they <em>have</em> been saved.", "text-error"
@@ -109,7 +116,8 @@ def pull_request(our_sha, their_sha):
         data=json.dumps(payload), headers=headers)
     try:
         req.raise_for_status()
-    except HTTPError:
+    except HTTPError as e:
+        app.logger.error("Couldn't open pull request. Error: %s" % e)
         return False
 
 
@@ -121,8 +129,9 @@ def checkout():
         origin.pull('master')
         # make sure our file is the correct, clean version
         git.checkout("spammers.txt")
-    except GitCommandError:
+    except GitCommandError, CheckoutError:
         # Not much point carrying on without the latest spammer file
+        app.logger.critical("Couldn't check out latest spammers.txt. Failing.")
         abort(500)
 
 def update_db():
