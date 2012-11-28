@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import sys
 
-from spamsub import app
-app.run(host='0.0.0.0')
+sys.path.append("..")
+
+from webapp import app
+app.run(host='127.0.0.1')

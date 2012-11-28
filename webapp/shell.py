@@ -3,10 +3,10 @@
 
 import os
 import sys
+sys.path.append("..")
 from flask import *
-from spamsub import app, db
-
-from spamsub.models import *
+from webapp import app, db
+from webapp.apps.spamsub.models import *
 
 app.testing = True
 client = app.test_client()

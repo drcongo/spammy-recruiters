@@ -13,6 +13,9 @@
         {% assets "bootstrap_responsive" %}
             <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
         {% endassets %}
+        <script type=text/javascript>
+            $RECAPTCHA_PUBLIC_KEY = "{{ recaptcha_public_key|safe }}";
+        </script>
         <!--[if lt IE 9]>
         {% assets "html5shim" %}
             <script src="{{ ASSET_URL }}"></script>
@@ -26,7 +29,7 @@
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="{{ url_for('index') }}">Submit a Spammer</a>
+                    <a class="brand" href="{{ url_for('spamsub.index') }}">Submit a Spammer</a>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li><a href="https://github.com/drcongo/spammy-recruiters">About</a></li>

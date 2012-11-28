@@ -1,15 +1,24 @@
 <fieldset>
 <h4>Add a recruiter's address to our shared database</h4>
-<div>
-    {{ form.csrf_token }}
-    <div class="input-prepend">
-        <span class="add-on">@</span>
-        {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$",required="required") }}
+    <div class="control-group">
+        <div class="controls">
+            {{ form.csrf_token }}
+            <div class="input-prepend">
+                <span class="add-on">@</span>
+                {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$", required="required")}}
+            </div>
+            <div id="recaptcha_parent">
+                <div id="recaptcha">
+                    {{ form.recaptcha }}
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        {{ form.submit(class="btn", value="Tell us") }}
+    <div class="control-group">
+        <div class="controls">
+            {{ form.submit(class="btn", id="spam_submit", value="Tell us") }}
+        </div>
     </div>
-</div>
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
