@@ -46,13 +46,14 @@ from apps.spamsub.views import spamsub
 app.register_blueprint(spamsub, url_prefix='/')
 
 # set up logging
+# the following line causes a crash using logging 0.4.9.6
+# Function:           %(funcName)s
 if not app.debug:
     log_format = logging.Formatter("""
 ---
 Message type:       %(levelname)s
 Location:           %(pathname)s:%(lineno)d
 Module:             %(module)s
-Function:           %(funcName)s
 Time:               %(asctime)s
 
 %(message)s
