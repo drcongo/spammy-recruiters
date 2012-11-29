@@ -37,8 +37,7 @@ def index():
         'index.jinja',
         form=form,
         count=count,
-        latest=latest,
-        recaptcha_public_key=app.config['RECAPTCHA_PUBLIC_KEY'])
+        latest=latest)
 
 @spamsub.route('download', methods=['GET'])
 def download():
