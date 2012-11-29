@@ -1,4 +1,3 @@
-# TODO: There's no error handling whatsoever, as yet
 """
 Utility functions for interacting with our Git repos
 """
@@ -122,16 +121,24 @@ def pull_request(our_sha, their_sha):
 
 
 def checkout():
-    """ Check out the latest version of spammers.txt from the main repo """
+    """ Ensure that repos are in sync, and we have the correct spammers.txt """
     git = repo.git
     origin = repo.remotes.origin
+    our_remote = repo.remotes.our_remote
+    repo.heads.master.checkout()
+    index = repo.index
     try:
-        origin.pull('master')
-        # make sure our file is the correct, clean version
+        # fetch all remote refs
+        git.pull(all=True)
+        # ensure that local master is in sync with our_remote
+        if index.diff('our_remote/master'):
+            # unmerged PRs or failed pushes to origin, sync with our_remote
+            our_remote.pull('master')
+            our_remote.push('master')
         git.checkout("spammers.txt")
-    except GitCommandError, CheckoutError:
+    except (GitCommandError, CheckoutError) as e:
         # Not much point carrying on without the latest spammer file
-        app.logger.critical("Couldn't check out latest spammers.txt. Failing.")
+        app.logger.critical("Couldn't check out latest spammers.txt: %s" % e)
         abort(500)
 
 def update_db():
