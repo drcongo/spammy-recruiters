@@ -48,32 +48,43 @@ def check_if_exists(address):
         db.session.commit()
         write_new_spammers()
         return False
-    return True
 
 def write_new_spammers():
-    """ Synchronise all changes between GitHub and webapp """
+    """
+    Synchronise all changes between GitHub and webapp
+    Because we may have multiple pending pull requests,
+    each changeset must be added to a new integration branch, which issues
+    the pull request to origin/master
+
+    TODO: tidy up remote integration branches
+    """
     errs = False
     if ok_to_update():
+        checkout()
+        # switch to a new integration branch, and force-reset it to master
+        newbranch = "integration_%s" % datetime.now().strftime(
+                "%Y_%b_%d_%H_%M_%S")
+        git.checkout(b=newbranch)
+        git.reset('master', hard=True)
+        index = repo.index
         # re-generate spammers.txt
         with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
-            updated_spammers = " OR \n".join([addr.address for
+            updated_spammers = " OR \n".join([addr.address.strip() for
                 addr in Address.query.order_by('address').all()])
             f.write(updated_spammers)
             # files under version control should end with a newline
-            f.write(" \n")
-        # add spammers.txt to local repo
-        index = repo.index
+            f.write("\n")
+        # add spammers.txt to local integration branch
         try:
             index.add(['spammers.txt'])
-            commit = index.commit("Updating Spammers on %s" % now)
+            index.commit("Updating Spammers on %s" % now)
             # push local repo to webapp's remote
-            our_remote = repo.remotes.our_remote
-            our_remote.push('master')
+            our_remote.push(newbranch)
         except GitCommandError as e:
             errs = True
             app.logger.error("Couldn't push to staging remote. Err: %s" % e)
         # send pull request to main remote
-        our_sha = "urschrei:master"
+        our_sha = "urschrei:%s" % newbranch
         their_sha = 'master'
         if not errs and pull_request(our_sha, their_sha):
             # reset counter to 0
@@ -82,6 +93,9 @@ def write_new_spammers():
             counter.timestamp = func.now()
             db.session.add(counter)
             db.session.commit()
+            # delete our local integration branch, and reset counter
+            git.checkout("master")
+            git.branch(newbranch, D=True)
         else:
             # register an error
             errs = True
@@ -119,22 +133,14 @@ def pull_request(our_sha, their_sha):
         app.logger.error("Couldn't open pull request. Error: %s" % e)
         return False
 
-
 def checkout():
-    """ Ensure that repos are in sync, and we have the correct spammers.txt """
+    """ Ensure that the spammers.txt we're comparing is from origin/master """
     git = repo.git
     origin = repo.remotes.origin
     our_remote = repo.remotes.our_remote
-    repo.heads.master.checkout()
-    index = repo.index
     try:
-        # fetch all remote refs
-        git.pull(all=True)
-        # ensure that local master is in sync with our_remote
-        if index.diff('our_remote/master'):
-            # unmerged PRs or failed pushes to origin, sync with our_remote
-            our_remote.pull('master')
-            our_remote.push('master')
+        origin.pull('master', f=True)
+        repo.heads.master.checkout()
         git.checkout("spammers.txt")
     except (GitCommandError, CheckoutError) as e:
         # Not much point carrying on without the latest spammer file
