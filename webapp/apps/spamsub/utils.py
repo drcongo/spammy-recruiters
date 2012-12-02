@@ -65,7 +65,6 @@ def write_new_spammers():
         newbranch = "integration_%s" % datetime.now().strftime(
                 "%Y_%b_%d_%H_%M_%S")
         git.checkout(b=newbranch)
-        git.reset('master', hard=True)
         index = repo.index
         # re-generate spammers.txt
         with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
@@ -136,12 +135,10 @@ def pull_request(our_sha, their_sha):
 def checkout():
     """ Ensure that the spammers.txt we're comparing is from origin/master """
     git = repo.git
-    origin = repo.remotes.origin
-    our_remote = repo.remotes.our_remote
     try:
-        origin.pull('master', f=True)
-        repo.heads.master.checkout()
-        git.checkout("spammers.txt")
+        git.pull(all=True)
+        repo.heads.master.checkout(f=True)
+        git.checkout("spammers.txt", f=True)
     except (GitCommandError, CheckoutError) as e:
         # Not much point carrying on without the latest spammer file
         app.logger.critical("Couldn't check out latest spammers.txt: %s" % e)
