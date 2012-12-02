@@ -9,14 +9,14 @@ function fix_tabindexes() {
 
 
 $(document).ready(function() {
-    /* dramatically reveal ReCaptcha and fix tab indexes */
+    /* dramatically reveal recaptcha, and fix tab indexes */
     $("#recaptcha_parent").show("fast");
     fix_tabindexes();
 });
 
 
 function new_recaptcha(){
-    /* render a new recaptcha when the form is re-rendered via AJAX */
+    /* render a new recaptcha when the form is re-populated via AJAX */
     Recaptcha.create(
         $RECAPTCHA_PUBLIC_KEY,
         "recaptcha",
@@ -43,7 +43,7 @@ $("#SpammerForm").submit(function(event) {
     recaptcha_r = $form.find('input[name="recaptcha_response_field"]').val(),
     recaptcha_c = $form.find('input[name="recaptcha_challenge_field"]').val(),
     url = $form.attr('action');
-    /* send the data using POST and re-generate the form w/the results */
+    /* send the data using POST and re-populate the form w/the results */
     $.post(url, {
         address: address,
         csrf_token: csrf,
@@ -51,6 +51,7 @@ $("#SpammerForm").submit(function(event) {
         recaptcha_challenge_field: recaptcha_c
         },
         function(data) {
+            /* TODO we need some 500 error handling here */
             var content = $(data);
             $("#SpammerForm").html(content);
             // only clear the address field if there are no errors
@@ -60,7 +61,6 @@ $("#SpammerForm").submit(function(event) {
             else {
                 $form.find('input[name="address"]').val("").focus();
             }
-            $form.find('input[name="address"]').focus();
             $("#thanks").delay(10000).fadeOut(750);
             $("#errors").delay(10000).fadeOut(750);
             new_recaptcha();
