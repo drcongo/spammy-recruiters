@@ -37,7 +37,12 @@ def check_if_exists(address):
     """
     normalised = u"@" + address.lower().strip()
     # add any missing spammers to our DB
-    update_db()
+    if Address.query.filter_by(address=normalised).first():
+        # if we immediately find the address, don't continue
+        return True
+    else:
+        # otherwise, pull updates from GitHub, and check again
+        update_db()
     if not Address.query.filter_by(address=normalised).first():
         db.session.add(Address(address=normalised))
         count = Counter.query.first()
