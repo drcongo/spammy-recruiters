@@ -25,7 +25,7 @@ class MyTest(TestCase):
         return app
 
     def setUp(self):
-
+        app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
         db.create_all()
         # add an initial timestamp, address, and update count
         db.session.add_all([
@@ -41,9 +41,14 @@ class MyTest(TestCase):
         db.drop_all()
 
     # Actual tests start here
+    def test_exists(self):
+        """ Should pass because we've added the address during setup """
+        print Address.query.filter_by(address="@test-address.com").first().address
+        assert check_if_exists('test-address.com')
+        print Address.query.filter_by(address="@test-address.com").first().address
 
     def test_address_exists(self):
-        """ Passes if we get the "We already know about … though" message """ 
+        """ Passes if we get the "We already know about … though" message """
         response = self.client.post('/', data=dict(
             address='test-address.com',
             recaptcha_challenge_field='test',
