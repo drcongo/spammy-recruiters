@@ -1,19 +1,19 @@
 """
 Utility functions for interacting with our Git repos
 """
+import os
+import json
+from datetime import datetime, timedelta
+
 from webapp import app
 from flask import abort, flash
-from datetime import datetime, timedelta
-import json
 from sqlalchemy import func, desc
 from models import *
 from git import Repo
 from git.exc import *
 from requests.exceptions import HTTPError
 import requests
-import os
 import humanize
-
 
 basename = os.path.dirname(__file__)
 now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
@@ -35,7 +35,7 @@ def check_if_exists(address):
     Check whether a submitted address exists in the DB, add it if not,
     re-generate the spammers.txt file, and open a pull request with the updates
     """
-    normalised = "@" + address.lower().strip()
+    normalised = u"@" + address.lower().strip()
     # add any missing spammers to our DB
     update_db()
     if not Address.query.filter_by(address=normalised).first():
@@ -49,6 +49,7 @@ def check_if_exists(address):
         if ok_to_update():
             write_new_spammers()
         return False
+    return True
 
 def write_new_spammers():
     """
@@ -61,7 +62,7 @@ def write_new_spammers():
     """
     errs = False
     # pull all branches from origin, and force-checkout master
-    checkout()
+    repo_checkout()
     # switch to a new integration branch
     newbranch = "integration_%s" % datetime.now().strftime(
             "%Y_%b_%d_%H_%M_%S")
@@ -131,8 +132,9 @@ def pull_request(our_sha, their_sha):
     except HTTPError as e:
         app.logger.error("Couldn't open pull request. Error: %s" % e)
         return False
+    return True
 
-def checkout():
+def repo_checkout():
     """ Ensure that the spammers.txt we're comparing is from origin/master """
     git = repo.git
     try:
@@ -147,13 +149,14 @@ def checkout():
 def update_db():
     """ Add any missing spammers to our app DB """
     # pull all branches from origin, and force-checkout master
-    checkout()
+    repo_checkout()
     their_spammers = set(get_spammers())
     our_spammers = set(addr.address.strip() for addr in
         Address.query.order_by('address').all())
-    to_update = [Address(address=new_addr) for new_addr in
-        list(their_spammers - our_spammers)]
-    db.session.add_all(to_update)
+    to_update = list(their_spammers - our_spammers)
+    if to_update:
+        db.session.add_all([Address(address=new_addr) for
+            new_addr in to_update])
     # reset sync timestamp
     latest = UpdateCheck.query.first() or UpdateCheck()
     latest.timestamp = func.now()
@@ -171,7 +174,7 @@ def sync_check():
         db.session.add(latest)
         db.session.commit()
     elapsed = datetime.now() - latest.timestamp
-    if elapsed.total_seconds > 3600:
+    if elapsed.total_seconds() > 3600:
         update_db()
         elapsed = datetime.now() - timedelta(seconds=1)
     return humanize.naturaltime(elapsed)
