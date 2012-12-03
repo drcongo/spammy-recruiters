@@ -46,7 +46,8 @@ def check_if_exists(address):
         count.count += 1
         db.session.add(count)
         db.session.commit()
-        write_new_spammers()
+        if ok_to_update():
+            write_new_spammers()
         return False
 
 def write_new_spammers():
@@ -59,50 +60,49 @@ def write_new_spammers():
     TODO: tidy up remote integration branches
     """
     errs = False
-    if ok_to_update():
-        checkout()
-        # switch to a new integration branch, and force-reset it to master
-        newbranch = "integration_%s" % datetime.now().strftime(
-                "%Y_%b_%d_%H_%M_%S")
-        git.checkout(b=newbranch)
-        index = repo.index
-        # re-generate spammers.txt
-        with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
-            updated_spammers = " OR \n".join([addr.address.strip() for
-                addr in Address.query.order_by('address').all()])
-            f.write(updated_spammers)
-            # files under version control should end with a newline
-            f.write("\n")
-        # add spammers.txt to local integration branch
-        try:
-            index.add(['spammers.txt'])
-            index.commit("Updating Spammers on %s" % now)
-            # push local repo to webapp's remote
-            our_remote.push(newbranch)
-        except GitCommandError as e:
-            errs = True
-            app.logger.error("Couldn't push to staging remote. Err: %s" % e)
-        # send pull request to main remote
-        our_sha = "urschrei:%s" % newbranch
-        their_sha = 'master'
-        if not errs and pull_request(our_sha, their_sha):
-            # reset counter to 0
-            counter = Counter.query.first()
-            counter.count = 0
-            counter.timestamp = func.now()
-            db.session.add(counter)
-            db.session.commit()
-            # delete our local integration branch, and reset counter
-            git.checkout("master")
-            git.branch(newbranch, D=True)
-        else:
-            # register an error
-            errs = True
-        if errs:
-            flash(
-                "There was an error sending your updates to GitHub. We'll \
+    # pull all branches from origin, and force-checkout master
+    checkout()
+    # switch to a new integration branch
+    newbranch = "integration_%s" % datetime.now().strftime(
+            "%Y_%b_%d_%H_%M_%S")
+    git.checkout(b=newbranch)
+    index = repo.index
+    # re-generate spammers.txt
+    with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
+        updated_spammers = " OR \n".join([addr.address.strip() for
+            addr in Address.query.order_by('address').all()])
+        f.write(updated_spammers)
+        # files under version control should end with a newline
+        f.write("\n")
+    # add spammers.txt to local integration branch
+    try:
+        index.add(['spammers.txt'])
+        index.commit("Updating Spammers on %s" % now)
+        # push local repo to webapp's remote
+        our_remote.push(newbranch)
+    except GitCommandError as e:
+        errs = True
+        app.logger.error("Couldn't push to staging remote. Err: %s" % e)
+    # send pull request to main remote
+    our_sha = "urschrei:%s" % newbranch
+    their_sha = 'master'
+    if not errs and pull_request(our_sha, their_sha):
+        # delete our local integration branch, and reset counter
+        counter = Counter.query.first()
+        counter.count = 0
+        counter.timestamp = func.now()
+        db.session.add(counter)
+        db.session.commit()
+        git.checkout("master")
+        git.branch(newbranch, D=True)
+    else:
+        # register an error
+        errs = True
+    if errs:
+        flash(
+            "There was an error sending your updates to GitHub. We'll \
 try again later, though, and they <em>have</em> been saved.", "text-error"
-                )
+            )
 
 def get_spammers():
     """ Return an up-to-date list of spammers from the main repo text file """
@@ -146,7 +146,7 @@ def checkout():
 
 def update_db():
     """ Add any missing spammers to our app DB """
-    # pull changes from main remote into local
+    # pull all branches from origin, and force-checkout master
     checkout()
     their_spammers = set(get_spammers())
     our_spammers = set(addr.address.strip() for addr in
