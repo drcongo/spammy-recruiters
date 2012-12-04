@@ -10,8 +10,7 @@ function fix_tabindexes() {
 
 $(document).ready(function() {
     // dramatically reveal recaptcha, and fix tab indexes
-    $("#recaptcha_parent").hide();
-    $("#recaptcha_parent").slideDown("slow");
+    $("#recaptcha_parent").hide().slideDown("slow");
     fix_tabindexes();
 });
 
