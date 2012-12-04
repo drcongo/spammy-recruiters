@@ -6,8 +6,21 @@ from flask.ext.testing import TestCase
 from webapp import app as ss
 from webapp import db
 from webapp.apps.spamsub.models import *
-from webapp.apps.spamsub.utils import *
+from webapp.apps.spamsub import utils
 from datetime import timedelta
+
+
+def mock_checkout():
+    """ lets just pretend we're checking out the right file """
+    pass
+
+def mock_pull_request():
+    """ don't actually open a pull request """
+    return True
+
+utils.repo_checkout = mock_checkout
+utils.pull_request = mock_pull_request
+
 
 
 class MyTest(TestCase):
@@ -44,7 +57,7 @@ class MyTest(TestCase):
     def test_exists(self):
         """ Should pass because we've added the address during setup """
         print Address.query.filter_by(address="@test-address.com").first().address
-        assert check_if_exists('test-address.com')
+        assert utils.check_if_exists('test-address.com')
         print Address.query.filter_by(address="@test-address.com").first().address
 
     def test_address_exists(self):
@@ -69,7 +82,7 @@ class MyTest(TestCase):
         ctr.count += 2
         db.session.add(ctr)
         db.session.commit()
-        assert ok_to_update()
+        assert utils.ok_to_update()
 
     def test_ok_to_update_date(self):
         """ Should pass because more than a day has passed """
@@ -77,10 +90,10 @@ class MyTest(TestCase):
         ctr.timestamp = ctr.timestamp + timedelta(days=1, seconds=1)
         db.session.add(ctr)
         db.session.commit()
-        assert ok_to_update()
+        assert utils.ok_to_update()
 
     def test_ok_to_update_fails(self):
         """ Should fail because the counter's zero, and < 24 hours old """
-        assert not ok_to_update()
+        assert not utils.ok_to_update()
 
 
