@@ -35,6 +35,12 @@ class Address(db.Model, SpamsubMixin):
     def __init__(self, address):
         self.address = address
 
+    @classmethod
+    def exists(self, address):
+        if self.query.filter_by(address=address).first():
+            return True
+        return False
+
 
 class Counter(db.Model, SpamsubMixin):
     """
