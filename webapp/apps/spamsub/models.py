@@ -37,9 +37,7 @@ class Address(db.Model, SpamsubMixin):
 
     @classmethod
     def exists(self, address):
-        if self.query.filter_by(address=address).first():
-            return True
-        return False
+        return True if self.query.filter_by(address=address).first() else False
 
 
 class Counter(db.Model, SpamsubMixin):
@@ -66,6 +64,7 @@ class Counter(db.Model, SpamsubMixin):
         except AssertionError:
             count = 0
         return count
+
 
 class UpdateCheck(db.Model, SpamsubMixin):
     """ Update check timestamp """
