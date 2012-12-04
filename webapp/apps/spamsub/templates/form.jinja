@@ -22,7 +22,7 @@
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div id="thanks">
+        <div id="thanks" class="information">
             <fieldset>
                 <legend>Thanks!</legend>
                 {% for category, message in messages %}
@@ -33,7 +33,7 @@
     {% endif %}
 {% endwith %}
 {% if form.errors %}
-    <div id="errors">
+    <div id="errors" class="information">
         <fieldset>
             <legend>There was a problem</legend>
             <ul class="errors">
