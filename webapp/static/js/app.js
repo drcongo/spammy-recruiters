@@ -33,7 +33,6 @@ function new_recaptcha(){
 }
 
 
-
 $("#SpammerForm").submit(function(event) {
     event.preventDefault();
     var $form = $(this);
@@ -61,4 +60,15 @@ $("#SpammerForm").submit(function(event) {
                 }
             );
     });
+});
+
+
+$("#address").keyup(function(){
+    // show or fade body copy and GitHub link based on address input
+    if ($(this).val()) {
+        $(".bodycopy").fadeTo("slow", 0.5);
+    }
+    else {
+        $(".bodycopy").fadeTo("fast", 1.0);
+    }
 });
