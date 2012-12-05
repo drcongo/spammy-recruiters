@@ -48,6 +48,7 @@ $("#SpammerForm").submit(function(event) {
                     // TODO we need some 500 error handling here
                     // re-populate the form
                     $form.html($(data));
+                    $(".information").hide().fadeIn(300);
                     // only clear the address field if there are no errors
                     if ($("#errors").length !== 0) {
                         $form.find('input[name="address"]').focus();
