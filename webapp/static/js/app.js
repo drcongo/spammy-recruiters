@@ -17,19 +17,18 @@ $(document).ready(function() {
 
 function new_recaptcha(){
     // render a new recaptcha when the form is re-populated via AJAX
-    $("#recaptcha_parent").delay(500).slideDown("fast", function(){
-            Recaptcha.create(
-                $RECAPTCHA_PUBLIC_KEY,
-                "recaptcha",
-                {
-                    theme: "clean",
-                    tabindex: 0,
-                    callback: function(){
-                        fix_tabindexes();
-                    }
-                }
-            );
-    });
+    $("#recaptcha_parent").hide().delay(250).slideDown("slow");
+    Recaptcha.create(
+        $RECAPTCHA_PUBLIC_KEY,
+        "recaptcha",
+        {
+            theme: "clean",
+            tabindex: 0,
+            callback: function(){
+                fix_tabindexes();
+            }
+        }
+    );
 }
 
 
