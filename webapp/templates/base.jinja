@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}Submit a Spammer{% endblock %}</title>
+        <title>{% block title %}Name and Shame a Spammy Recruiter{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% assets "bootstrap" %}
             <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
@@ -13,6 +13,9 @@
         {% assets "bootstrap_responsive" %}
             <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
         {% endassets %}
+        <script type=text/javascript>
+            $RECAPTCHA_PUBLIC_KEY = "{{ recaptcha_public_key|safe }}";
+        </script>
         <!--[if lt IE 9]>
         {% assets "html5shim" %}
             <script src="{{ ASSET_URL }}"></script>
@@ -20,16 +23,15 @@
         <![endif]-->
     </head>
     <body>
-        <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="{{ url_for('index') }}">Submit a Spammer</a>
+                    <a class="brand" href="{{ url_for('spamsub.index') }}">Name and Shame a Spammy Recruiter</a>
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li><a href="https://github.com/drcongo/spammy-recruiters">About</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>

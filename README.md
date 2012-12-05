@@ -33,6 +33,11 @@ Install the Canned Response plugin from Google Labs, create a new filter in your
 
 Make sure to have the filter also flag it as spam and delete it.
 
+## What to do if you find your company on this list ##
+
+1. Stop shitting in the inboxes of busy people.
+2. Leave and go work for a company with some ethics.
+
 ###  And finally ###
 
 If you actually use any of the companies in this list, you might want to do two things...
