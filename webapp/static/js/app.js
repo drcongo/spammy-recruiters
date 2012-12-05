@@ -5,6 +5,7 @@ function fix_tabindexes() {
     $("#recaptcha_reload_btn").attr('tabindex', 2);
     $("#recaptcha_switch_audio_btn").attr('tabindex', 3);
     $("#recaptcha_whatsthis_btn").attr('tabindex', 4);
+    $("#ghlink").attr('tabindex', 5);
 }
 
 
