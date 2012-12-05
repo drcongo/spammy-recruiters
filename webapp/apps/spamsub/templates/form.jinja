@@ -24,7 +24,7 @@
     {% if messages %}
         <div id="thanks" class="information">
             <fieldset>
-                <legend><div class="alert alert-success">Thanks!</div></legend>
+                <legend>Thanks!</legend>
                 {% for category, message in messages %}
                     <h4 class="{{ category }}">{{ message }}</h4>
                 {% endfor %}
@@ -35,7 +35,7 @@
 {% if form.errors %}
     <div id="errors" class="information">
         <fieldset>
-            <legend><div class="alert alert-error">There was a problem</div></legend>
+            <legend>There was a problem</legend>
             <ul class="errors">
             {% for field_name, field_errors in form.errors|dictsort if field_errors %}
                 {% for error in field_errors %}
