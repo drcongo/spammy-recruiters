@@ -13,8 +13,8 @@ spamsub = Blueprint(
 @spamsub.route('/', methods=['GET', 'POST'])
 def index():
     """ Index page """
-    count = Address.query.count()
     latest = utils.sync_check()
+    count = Address.query.count()
     form = SpammerForm()
     # try to validate, and check for AJAX submission
     if form.validate_on_submit():
