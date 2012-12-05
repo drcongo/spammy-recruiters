@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 function new_recaptcha(){
     // render a new recaptcha when the form is re-populated via AJAX
-    $("#recaptcha_parent").slideDown("fast", function(){
+    $("#recaptcha_parent").delay(500).slideDown("fast", function(){
             Recaptcha.create(
                 $RECAPTCHA_PUBLIC_KEY,
                 "recaptcha",
@@ -54,8 +54,11 @@ $("#SpammerForm").submit(function(event) {
                     }
                     else {
                         $form.find('input[name="address"]').val("").focus();
+                        $(".bodycopy").fadeTo("fast", 1.0);
                     }
-                    $(".information").delay(10000).fadeOut(750);
+                    $(".information").delay(7500).animate({
+                        height: "toggle", opacity: "toggle"
+                        }, "slow" );
                     new_recaptcha();
                 }
             );
