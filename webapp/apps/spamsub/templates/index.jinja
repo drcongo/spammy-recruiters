@@ -2,12 +2,14 @@
 {% block content %}
 <div class="row-fluid">
     <div class="span6 bodycopy">
-        <h4>What we're doing</h4>
-        {{ lipsum(n=2) }}
-        <p><strong>We know about <span class="text-error">{{ count }}</span> spammy UK tech recruitment companies.</strong></p>
-        <p><small>The spammer address file was last checked for updates {{ latest }}.</small></p>
-        <p><a class="label" href="{{ url_for('.download') }}">Download spammers.txt</a> <small class="muted">(we'll check for updates first)</small></p>
-        <p>If you'd prefer to send us a pull request, <a id="ghlink" href="https://github.com/drcongo/spammy-recruiters">we're on GitHub</a></p>
+        <section>
+            <h4>What we're doing</h4>
+            <p>{{ lipsum(n=2) }}<p>
+            <p><strong>We know about <span class="text-error">{{ count }}</span> spammy UK tech recruitment companies.</strong></p>
+            <p><small>The spammer address file was last checked for updates {{ latest }}.</small></p>
+            <p><a class="label" href="{{ url_for('.download') }}">Download spammers.txt</a> <small class="muted">(we'll check for updates first)</small></p>
+            <p>If you'd prefer to send us a pull request, <a id="ghlink" href="https://github.com/drcongo/spammy-recruiters">we're on GitHub</a></p>
+        </section>
     </div>
     <div class="span6" id="FormHolder">
         <form id="SpammerForm" method="POST" action="{{ url_for('.index') }}">
