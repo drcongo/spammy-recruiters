@@ -1,6 +1,7 @@
 function fix_tabindexes() {
     // meddle with recaptcha tab indexes
-    $("#recaptcha_response_field").attr('tabindex', 0);
+    $("#recaptcha_response_field").attr('tabindex', 0)
+        .attr("required", "required");
     $("#spam_submit").attr('tabindex', 1);
     $("#recaptcha_reload_btn").attr('tabindex', 2);
     $("#recaptcha_switch_audio_btn").attr('tabindex', 3);
