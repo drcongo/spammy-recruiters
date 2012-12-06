@@ -1,26 +1,38 @@
 <fieldset>
-<h4>1. Enter a recruiter's address</h4>
-    <div class="control-group">
-        <div class="controls">
-            {{ form.csrf_token }}
-            <div class="input-prepend">
-                <span class="add-on">@</span>
-                {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$", required="required")}}
-            </div>
-            <h4>2. Prove that you're human</h4>
-            <div id="recaptcha_parent">
-                <div id="recaptcha">
-                    {{ form.recaptcha }}
+    <ol>
+        <li>
+            <h4>Enter a recruiter's address</h4>
+            <div class="control-group">
+                <div class="controls">
+                    {{ form.csrf_token }}
+                    <div class="input-prepend">
+                        <span class="add-on">@</span>
+                        {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$", required="required")}}
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="control-group">
-    <h4>3. Push the button</h4>
-        <div class="controls">
-            {{ form.submit(class="btn", id="spam_submit", value="Add spammer") }}
-        </div>
-    </div>
+        </li>
+        <li>
+            <h4>Prove that you're human</h4>
+            <div class="control-group">
+                <div class="controls">
+                    <div id="recaptcha_parent">
+                        <div id="recaptcha">
+                            {{ form.recaptcha }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <h4>Push the button</h4>
+            <div class="control-group">
+                <div class="controls">
+                    {{ form.submit(class="btn", id="spam_submit", value="Add spammer") }}
+                </div>
+            </div>
+        </li>
+    </ol>
 </fieldset>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
