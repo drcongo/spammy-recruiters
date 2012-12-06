@@ -1,5 +1,5 @@
 <fieldset>
-<h4>Add a recruiter's address to our shared database</h4>
+<h4>1. Enter a recruiter's address</h4>
     <div class="control-group">
         <div class="controls">
             {{ form.csrf_token }}
@@ -7,6 +7,7 @@
                 <span class="add-on">@</span>
                 {{ form.address(placeholder="spammyrecruiter.co.uk", id="address", autofocus="autofocus", pattern="^[\w\-.]*\.[a-z]{2,4}$", required="required")}}
             </div>
+            <h4>2. Prove that you're human</h4>
             <div id="recaptcha_parent">
                 <div id="recaptcha">
                     {{ form.recaptcha }}
@@ -15,8 +16,9 @@
         </div>
     </div>
     <div class="control-group">
+    <h4>3. Tell us</h4>
         <div class="controls">
-            {{ form.submit(class="btn", id="spam_submit", value="Tell us") }}
+            {{ form.submit(class="btn", id="spam_submit", value="Add spammer") }}
         </div>
     </div>
 </fieldset>
