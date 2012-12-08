@@ -9,13 +9,16 @@ function fix_tabindexes() {
     $("#ghlink").attr('tabindex', 5);
 }
 
-
 $(document).ready(function() {
     // dramatically reveal recaptcha, and fix tab indexes
     $("#recaptcha_parent").hide().slideDown("slow");
     fix_tabindexes();
 });
 
+$(window).bind("load", function() {
+    // do this stuff after the page has fully rendered
+    get_updates();
+});
 
 function new_recaptcha(){
     // render a new recaptcha when the form is re-populated via AJAX
@@ -28,11 +31,11 @@ function new_recaptcha(){
             tabindex: 0,
             callback: function(){
                 fix_tabindexes();
+                get_updates();
             }
         }
     );
 }
-
 
 $("#SpammerForm").submit(function(event) {
     event.preventDefault();
@@ -67,6 +70,18 @@ $("#SpammerForm").submit(function(event) {
     });
 });
 
+function get_updates() {
+    // get latest query counts and last updated time
+    $('#last-updated').parent().hide("slow", function(){
+            $.get('updates', function(data) {
+                var keys = Object.keys(data);
+                $('#count').hide().text(data.count).fadeTo('slow', 1.0);
+                $('#last-updated').text(
+                    "The spammer address file was last checked for updates " +
+                    data.last_updated + ".").parent().fadeTo('slow', 1.0);
+        });
+    });
+}
 
 $("#address").keyup(function(){
     // show or fade body copy and GitHub link based on address input

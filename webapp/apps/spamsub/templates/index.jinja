@@ -5,8 +5,11 @@
         <section>
             <h4>What we're doing</h4>
             <p>{{ lipsum(n=2) }}<p>
-            <p><strong>We know about <span class="text-error">{{ count }}</span> spammy UK tech recruitment companies.</strong></p>
-            <p><small>The spammer address file was last checked for updates {{ latest }}.</small></p>
+            <p><strong>We know about <span id="count" class="text-error">{{ count }}</span> spammy UK tech recruitment companies.</strong></p>
+            <p><small id="last-updated"></small></p>
+            <noscript>
+                <p class="alert alert-error">Some stats (such as how fresh our spammer file is) can't be displayed, either because you've turned off JavaScript in your browser, or it doesn't support it.</p>
+            </noscript>
             <p><a class="label" href="{{ url_for('.download') }}">Download spammers.txt</a> <small class="muted">(we'll check for updates first)</small></p>
             <p>If you'd prefer to send us a pull request, <a id="ghlink" href="https://github.com/drcongo/spammy-recruiters">we're on GitHub</a></p>
         </section>

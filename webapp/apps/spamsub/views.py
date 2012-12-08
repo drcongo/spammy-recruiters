@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, request, flash, render_template, send_file
+from flask import Blueprint, request, flash, render_template, send_file, jsonify
 from models import *
 from forms import SpammerForm
 import utils
@@ -13,7 +13,6 @@ spamsub = Blueprint(
 @spamsub.route('/', methods=['GET', 'POST'])
 def index():
     """ Index page """
-    latest = utils.sync_check()
     count = Address.query.count()
     form = SpammerForm()
     # try to validate, and check for AJAX submission
@@ -37,7 +36,6 @@ def index():
         'index.jinja',
         form=form,
         count=count,
-        latest=latest,
         recaptcha_public_key=app.config['RECAPTCHA_PUBLIC_KEY'])
 
 @spamsub.route('download', methods=['GET'])
@@ -48,3 +46,17 @@ def download():
         os.path.join(utils.basename, "git_dir/spammers.txt"),
         as_attachment=True,
         attachment_filename="spammers.txt")
+
+@spamsub.route('updates', methods=['GET'])
+def updates():
+    """ Check for updates in GitHub repo if more than an hour's passed """
+    vals = {
+        'last_updated': utils.sync_check(),
+        'count': Address.query.count()
+        }
+    return jsonify(vals)
+
+
+
+
+
