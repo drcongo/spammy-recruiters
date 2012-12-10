@@ -14,7 +14,7 @@ This list is now too long to fit into a single Gmail filter, so you'll probably 
 
 ## Protip ##
 
-Install the Canned Response plugin from Google Labs, create a new filter in your Gmail / Google Apps, paste this list into the From field, and set Gmail to automatically reply with something like this:
+Install the Canned Response plugin from Google Labs (it's in `Settings --> Labs --> Canned Responses`: Enable it, then scroll to the bottom of the page and save your changes), create a new filter in your Gmail / Google Apps, paste this list into the `From` field, and set Gmail to automatically reply with something like this:
 
     Hi.
 
