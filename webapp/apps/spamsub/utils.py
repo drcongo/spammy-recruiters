@@ -76,8 +76,11 @@ def write_new_spammers():
     # re-generate spammers.txt
     try:
         output(filename="spammers.txt")
-    except IOError:
-        abort(500)
+    except IOError as e:
+        app.logger.error("Couldn't write spammers.txt. Err: %s" % e)
+        repo.heads.master.checkout(f=True)
+        git.branch(newbranch, D=True)
+        errs = True
     # add spammers.txt to local integration branch
     try:
         index.add(['spammers.txt'])
