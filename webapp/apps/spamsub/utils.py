@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timedelta
 
 from webapp import app
-from flask import abort, flash
+from flask import abort, flash, render_template
 from sqlalchemy import func, desc
 from models import *
 from git import Repo
@@ -74,12 +74,10 @@ def write_new_spammers():
     git.checkout(b=newbranch)
     index = repo.index
     # re-generate spammers.txt
-    with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'w') as f:
-        updated_spammers = " OR \n".join([addr.address.strip() for
-            addr in Address.query.order_by('address').all()])
-        f.write(updated_spammers)
-        # files under version control should end with a newline
-        f.write("\n")
+    try:
+        output(filename="spammers.txt")
+    except IOError:
+        abort(500)
     # add spammers.txt to local integration branch
     try:
         index.add(['spammers.txt'])
@@ -109,6 +107,14 @@ def write_new_spammers():
             "There was an error sending your updates to GitHub. We'll \
 try again later, though, and they <em>have</em> been saved.", "text-error"
             )
+
+def output(filename, template="output.jinja"):
+    """ write filename to the git directory, using the specified template """
+    with open(os.path.join(basename, "git_dir", filename), "w") as f:
+            f.write(render_template(
+                template,
+                addresses=[record.address.strip() for
+                    record in Address.query.order_by('address').all()]))
 
 def get_spammers():
     """ Return an up-to-date list of spammers from the main repo text file """
