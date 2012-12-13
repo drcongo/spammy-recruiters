@@ -11,8 +11,7 @@ function fix_tabindexes() {
 
 $(document).ready(function() {
     // dramatically reveal recaptcha, and fix tab indexes
-    $("#recaptcha_parent").hide().slideDown("slow");
-    fix_tabindexes();
+    $("#recaptcha_parent").hide().slideDown("slow", fix_tabindexes());
 });
 
 $(window).bind("load", function() {
@@ -20,7 +19,7 @@ $(window).bind("load", function() {
     get_updates();
 });
 
-function new_recaptcha(){
+function new_recaptcha() {
     // render a new recaptcha when the form is re-populated via AJAX
     $("#recaptcha_parent").hide().delay(250).slideDown("slow");
     Recaptcha.create(
@@ -43,13 +42,12 @@ $("#SpammerForm").submit(function(event) {
     // get "successful" form values and URL
     values = $form.serializeArray();
     url = $form.attr('action');
-    $('#recaptcha_parent').slideUp("slow", function(){
+    $('#recaptcha_parent').slideUp("slow", function() {
             // send the data using POST and re-populate the form w/the results
             $.post(
                 url,
                 values,
                 function(data) {
-                    // TODO we need some 500 error handling here
                     // re-populate the form
                     $form.html($(data));
                     $(".information").hide().fadeIn(300);
@@ -74,16 +72,15 @@ function get_updates() {
     // get latest query counts and last updated time
     $('#last-updated').parent().hide("slow", function(){
             $.get('updates', function(data) {
-                var keys = Object.keys(data);
                 $('#count').hide().text(data.count).fadeTo('slow', 1.0);
                 $('#last-updated').text(
-                    "The spammer address file was last checked for updates " +
+                    "We last checked for updates " +
                     data.last_updated + ".").parent().fadeTo('slow', 1.0);
         });
     });
 }
 
-$("#address").keyup(function(){
+$("#address").keyup(function() {
     // show or fade body copy and GitHub link based on address input
     if ($(this).val()) {
         $(".bodycopy").fadeTo("slow", 0.5);

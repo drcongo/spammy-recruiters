@@ -20,9 +20,12 @@
         </section>
     </div>
     <div class="span6" id="FormHolder">
-        <form id="SpammerForm" method="POST" action="{{ url_for('.index') }}">
-            {% include "form.jinja" %}
-        </form>
+        <section>
+            <h4>Add a spammer to the shared database</h4>
+            <form id="SpammerForm" method="POST" action="{{ url_for('.index') }}">
+                {% include "form.jinja" %}
+            </form>
+        </section>
     </div>
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 <fieldset>
     <ol>
         <li>
-            <h4>Enter a recruiter's address</h4>
+            <h5>Enter a recruiter's address</h5>
             <div class="control-group">
                 <div class="controls">
                     {{ form.csrf_token }}
@@ -13,7 +13,7 @@
             </div>
         </li>
         <li>
-            <h4>Prove that you're human</h4>
+            <h5>Prove that you're human</h5>
             <div class="control-group">
                 <div class="controls">
                     <div id="recaptcha_parent">
@@ -25,7 +25,7 @@
             </div>
         </li>
         <li>
-            <h4>Push the button</h4>
+            <h5>Push the button</h5>
             <div class="control-group">
                 <div class="controls">
                     {{ form.submit(class="btn", id="spam_submit", value="Add spammer") }}
