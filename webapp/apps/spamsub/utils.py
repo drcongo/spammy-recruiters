@@ -28,7 +28,7 @@ def ok_to_update():
         db.session.add(counter)
         db.session.commit()
     elapsed = counter.timestamp - datetime.now()
-    return any([counter.count >= 2, elapsed.days >= 1])
+    return any([counter.count >= 2, abs(elapsed.total_seconds()) >= 86400])
 
 def check_if_exists(address):
     """
@@ -187,8 +187,8 @@ def sync_check():
         latest = UpdateCheck()
         db.session.add(latest)
         db.session.commit()
-    elapsed = datetime.now() - latest.timestamp
-    if elapsed.total_seconds() > 3600:
+    elapsed = latest.timestamp - datetime.now()
+    if abs(elapsed.total_seconds()) > 3600:
         update_db()
         elapsed = datetime.now() - timedelta(seconds=1)
     return humanize.naturaltime(elapsed)

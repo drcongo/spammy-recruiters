@@ -87,7 +87,7 @@ class MyTest(TestCase):
     def test_ok_to_update_date(self):
         """ Should pass because more than a day has passed """
         ctr = Counter.query.first()
-        ctr.timestamp = ctr.timestamp + timedelta(days=1, seconds=1)
+        ctr.timestamp -= timedelta(days=1, seconds=1)
         db.session.add(ctr)
         db.session.commit()
         assert utils.ok_to_update()
