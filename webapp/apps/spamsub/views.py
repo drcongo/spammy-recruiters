@@ -52,7 +52,8 @@ def updates():
     """ Check for updates in GitHub repo if more than an hour's passed """
     vals = {
         'last_updated': utils.sync_check(),
-        'count': Address.query.count()
+        'count': Address.query.count(),
+        'top_three': Address.top_three()
         }
     return jsonify(vals)
 

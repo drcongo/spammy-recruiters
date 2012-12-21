@@ -31,13 +31,29 @@ class Address(db.Model, SpamsubMixin):
         db.TIMESTAMP,
         nullable=False,
         default=func.now())
+    count = db.Column(
+        db.Integer(),
+        default=1)
 
     def __init__(self, address):
         self.address = address
 
     @classmethod
     def exists(self, address):
-        return True if self.query.filter_by(address=address).first() else False
+        """ Check if an address exists, increment counter if it does """
+        exsts = self.query.filter_by(address=address).first()
+        if exsts:
+            exsts.count += 1
+            db.session.add(exsts)
+            db.session.commit()
+            return True
+        return False
+
+    @classmethod
+    def top_three(self):
+        """ Return top three most added spammers """
+        return [{each.address: each.count} for each in 
+            self.query.order_by(self.count.desc()).limit(3).all()]
 
 
 class Counter(db.Model, SpamsubMixin):

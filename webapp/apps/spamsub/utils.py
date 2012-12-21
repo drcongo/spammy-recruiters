@@ -187,7 +187,7 @@ def sync_check():
         latest = UpdateCheck()
         db.session.add(latest)
         db.session.commit()
-    elapsed = latest.timestamp - datetime.now()
+    elapsed = datetime.now() - latest.timestamp
     if abs(elapsed.total_seconds()) > 3600:
         update_db()
         elapsed = datetime.now() - timedelta(seconds=1)
