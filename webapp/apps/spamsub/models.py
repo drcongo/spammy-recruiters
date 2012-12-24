@@ -1,36 +1,45 @@
 from webapp import app, db
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy import func
 from sqlalchemy.orm import validates
+from sqlalchemy.sql import expression
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.types import DateTime
 
 # auto-generated index names use the ix_table_column naming convention
 
+
+class utcnow(expression.FunctionElement):
+    """ UTC Timestamp for compilation """
+    type = DateTime()
+
+
+# Define PG utcnow() function
+@compiles(utcnow, 'postgresql')
+def pg_utcnow(element, compiler, **kw):
+    """ Postgres UTC Timestamp """
+    return "TIMEZONE('utc', CURRENT_TIMESTAMP)"
+
+
 class SpamsubMixin(object):
-    """
-    Provides some common attributes to our models
-    """
+    """ Provides some common attributes to our models """
 
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
 
     __mapper_args__ = {'always_refresh': True}
+
     id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(DateTime, nullable=False, server_default=utcnow())
 
 
 class Address(db.Model, SpamsubMixin):
-    """
-    Address table
-    """
+    """ Address table """
     address = db.Column(
         db.String(250),
         nullable=False,
         unique=True,
         index=True)
-    timestamp = db.Column(
-        db.TIMESTAMP,
-        nullable=False,
-        default=func.now())
     count = db.Column(
         db.Integer(),
         default=1)
@@ -50,25 +59,19 @@ class Address(db.Model, SpamsubMixin):
         return False
 
     @classmethod
-    def top_three(self):
-        """ Return top three most added spammers """
-        return [{each.address: each.count} for each in 
-            self.query.order_by(self.count.desc()).limit(3).all()]
+    def top(self, number=3):
+        """ Return top spammers """
+        return [{"x": each.address, "y": each.count} for each in 
+            self.query.order_by(self.count.desc()).limit(number).all()]
 
 
 class Counter(db.Model, SpamsubMixin):
-    """
-    Counter table
-    """
+    """ Counter table """
     count = db.Column(
         db.Integer(),
         nullable=False,
         unique=True,
         index=True)
-    timestamp = db.Column(
-        db.TIMESTAMP,
-        nullable=False,
-        default=func.now())
 
     def __init__(self, count):
         self.count = count
@@ -83,11 +86,7 @@ class Counter(db.Model, SpamsubMixin):
 
 
 class UpdateCheck(db.Model, SpamsubMixin):
-    """ Update check timestamp """
-    timestamp = db.Column(
-        db.TIMESTAMP,
-        nullable=False,
-        default=func.now())
+    """ Update check timestamp table """
 
     def __init__(self):
-        self.timestamp = func.now()
+        self.timestamp = utcnow()

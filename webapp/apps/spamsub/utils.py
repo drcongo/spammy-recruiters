@@ -9,6 +9,7 @@ from webapp import app
 from flask import abort, flash, render_template
 from sqlalchemy import func, desc
 from models import *
+from models import utcnow as utcnow_
 from git import Repo
 from git.exc import *
 from requests.exceptions import HTTPError
@@ -16,7 +17,7 @@ import requests
 import humanize
 
 basename = os.path.dirname(__file__)
-now = datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+now = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S")
 repo = Repo(os.path.join(basename, "git_dir"))
 
 
@@ -27,7 +28,7 @@ def ok_to_update():
         counter = Count(0)
         db.session.add(counter)
         db.session.commit()
-    elapsed = counter.timestamp - datetime.now()
+    elapsed = counter.timestamp - datetime.utcnow()
     return any([counter.count >= 2, abs(elapsed.total_seconds()) >= 86400])
 
 def check_if_exists(address):
@@ -69,7 +70,7 @@ def write_new_spammers():
     # pull all branches from origin, and force-checkout master
     repo_checkout()
     # switch to a new integration branch
-    newbranch = "integration_%s" % datetime.now().strftime(
+    newbranch = "integration_%s" % datetime.utcnow().strftime(
             "%Y_%b_%d_%H_%M_%S")
     git.checkout(b=newbranch)
     index = repo.index
@@ -97,7 +98,7 @@ def write_new_spammers():
         # delete our local integration branch, and reset counter
         counter = Counter.query.first()
         counter.count = 0
-        counter.timestamp = func.now()
+        counter.timestamp = utcnow_()
         db.session.add(counter)
         db.session.commit()
         git.checkout("master")
@@ -173,7 +174,7 @@ def update_db():
             new_addr in to_update])
     # reset sync timestamp
     latest = UpdateCheck.query.first() or UpdateCheck()
-    latest.timestamp = func.now()
+    latest.timestamp = utcnow_()
     db.session.add(latest)
     db.session.commit()
 
@@ -187,8 +188,8 @@ def sync_check():
         latest = UpdateCheck()
         db.session.add(latest)
         db.session.commit()
-    elapsed = datetime.now() - latest.timestamp
+    elapsed = datetime.utcnow() - latest.timestamp
     if abs(elapsed.total_seconds()) > 3600:
         update_db()
-        elapsed = datetime.now() - timedelta(seconds=1)
+        elapsed = datetime.utcnow() - timedelta(seconds=1)
     return humanize.naturaltime(elapsed)
