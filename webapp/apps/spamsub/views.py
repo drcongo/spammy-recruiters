@@ -53,7 +53,6 @@ def updates():
     vals = {
         'last_updated': utils.sync_check(),
         'count': Address.query.count(),
-        'top_three': Address.top_three()
         }
     return jsonify(vals)
 
