@@ -17,7 +17,8 @@ locale.setlocale(locale.LC_ALL, '')
 
 app = Flask(__name__)
 # attach DB
-db = SQLAlchemy(app)
+from apps.shared.models import db
+db.init_app(app)
 
 # load configs
 app.config.from_pyfile('config/common.py')
@@ -63,12 +64,14 @@ Time:               %(asctime)s
     stream_handler.setFormatter(log_format)
     app.logger.addHandler(stream_handler)
 
+
 # set up error handling pages
 @app.errorhandler(404)
 def page_not_found(error):
     """ 404 handler """
     return render_template(
         'errors/404.jinja'), 404
+
 
 @app.errorhandler(500)
 def application_error(error):

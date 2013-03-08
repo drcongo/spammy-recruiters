@@ -20,4 +20,5 @@ yolk==0.4.3
 PyYAML==3.10
 yuicompressor==2.4.7
 GitPython==0.3.2.RC1
-requests==1.0.2
+Requests
+humanize

@@ -5,11 +5,12 @@ import os
 import json
 from datetime import datetime, timedelta
 
-from webapp import app
+from flask import current_app
+from apps.shared.models import db
+from apps.shared.models import utcnow as utcnow_
 from flask import abort, flash, render_template
 from sqlalchemy import func, desc
 from models import *
-from models import utcnow as utcnow_
 from git import Repo
 from git.exc import *
 from requests.exceptions import HTTPError
