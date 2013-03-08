@@ -39,6 +39,10 @@
         <div class="container-fluid">
             {% block content %}{% endblock %}
         </div>
+        {% assets "js_jquery" %}
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.mins.js"></script>
+            <script>window.jQuery || document.write('<script src="{{ ASSET_URL }}"><\/script>')</script>
+        {% endassets %}
         {% assets "js_all" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}

@@ -1,8 +1,13 @@
+js_jquery:
+  filters: yui_js
+  output: gen/jquery190.%(version)s.js
+  contents:
+    - http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js
+
 js_all:
   filters: yui_js
   output: gen/packed.%(version)s.js
   contents:
-    - http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js
     - js/bootstrap.js
     - js/bootstrap-collapse.js
     - js/bootstrap-transition.js
