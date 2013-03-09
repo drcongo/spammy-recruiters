@@ -1,0 +1,5 @@
+.vagrant
+venv
+pyarchive
+.pip
+.static-manifest
