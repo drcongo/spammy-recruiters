@@ -25,6 +25,8 @@ def build():
     """Execute build tasks for all components."""
     virtualenv.build()
     alembic_init.build()
+    # run alembic migrations
+    local('fab upgrade_db')
 
 @task
 def run_app():
