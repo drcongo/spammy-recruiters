@@ -1,3 +1,4 @@
+pip
 Fabric==1.4.3
 Flask==0.9
 Flask-Assets==0.7
@@ -14,7 +15,6 @@ alembic==0.4.0
 psycopg2==2.4.5
 pycrypto==2.6
 ssh==1.7.14
-webassets==0.9.dev
 wsgiref==0.1.2
 yolk==0.4.3
 PyYAML==3.10
@@ -22,3 +22,4 @@ yuicompressor==2.4.7
 GitPython==0.3.2.RC1
 Requests
 humanize
+webassets==dev
