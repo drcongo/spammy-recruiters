@@ -1,16 +1,13 @@
 pip
 Fabric==1.4.3
 Flask==0.9
-Flask-Assets==0.7
+Flask-Assets
 Flask-SQLAlchemy==0.16
 Flask-Testing==0.4
 Flask-WTF==0.8
-Jinja2==2.6
-Mako==0.7.2
 MarkupSafe==0.15
 SQLAlchemy==0.8
 WTForms==1.0.2
-Werkzeug==0.8.3
 alembic==0.4.0
 psycopg2==2.4.5
 pycrypto==2.6
