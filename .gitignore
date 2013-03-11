@@ -1,5 +1,5 @@
 .vagrant
 venv
-pyarchive
+pyarchives
 .pip
 .static-manifest
