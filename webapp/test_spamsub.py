@@ -2,11 +2,12 @@
 
 
 import os
+from flask import *
+from __init__ import app as ss
 from flask.ext.testing import TestCase
-from webapp import app as ss
-from webapp import db
-from webapp.apps.spamsub.models import *
-from webapp.apps.spamsub import utils
+from apps.shared.models import db
+from apps.spamsub.models import *
+from apps.spamsub import utils
 from datetime import timedelta
 
 
@@ -14,13 +15,13 @@ def mock_checkout():
     """ lets just pretend we're checking out the right file """
     pass
 
+
 def mock_pull_request():
     """ don't actually open a pull request """
     return True
 
 utils.repo_checkout = mock_checkout
 utils.pull_request = mock_pull_request
-
 
 
 class MyTest(TestCase):
@@ -44,8 +45,7 @@ class MyTest(TestCase):
         db.session.add_all([
             UpdateCheck(),
             Address(address="@test-address.com"),
-            Counter(count=0)
-            ])
+            Counter(count=0)])
         db.session.commit()
 
     def tearDown(self):
@@ -95,5 +95,3 @@ class MyTest(TestCase):
     def test_ok_to_update_fails(self):
         """ Should fail because the counter's zero, and < 24 hours old """
         assert not utils.ok_to_update()
-
-
