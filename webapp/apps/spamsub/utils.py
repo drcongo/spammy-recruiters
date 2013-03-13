@@ -5,11 +5,9 @@ import os
 import json
 from datetime import datetime, timedelta
 
-from flask import current_app
 from apps.shared.models import db
 from apps.shared.models import utcnow as utcnow_
 from flask import abort, flash, render_template
-from sqlalchemy import func, desc
 from models import *
 from git import Repo
 from git.exc import *
@@ -31,6 +29,7 @@ def ok_to_update():
         db.session.commit()
     elapsed = counter.timestamp - datetime.utcnow()
     return any([counter.count >= 2, abs(elapsed.total_seconds()) >= 86400])
+
 
 def check_if_exists(address):
     """
@@ -58,6 +57,7 @@ def check_if_exists(address):
         return False
     return True
 
+
 def write_new_spammers():
     """
     Synchronise all changes between GitHub and webapp
@@ -72,7 +72,7 @@ def write_new_spammers():
     repo_checkout()
     # switch to a new integration branch
     newbranch = "integration_%s" % datetime.utcnow().strftime(
-            "%Y_%b_%d_%H_%M_%S")
+        "%Y_%b_%d_%H_%M_%S")
     git.checkout(b=newbranch)
     index = repo.index
     # re-generate spammers.txt
@@ -111,7 +111,8 @@ def write_new_spammers():
         flash(
             "There was an error sending your updates to GitHub. We'll \
 try again later, though, and they <em>have</em> been saved.", "text-error"
-            )
+        )
+
 
 def output(filename, template="output.jinja"):
     """ write filename to the git directory, using the specified template """
@@ -121,6 +122,7 @@ def output(filename, template="output.jinja"):
                 addresses=[record.address.strip() for
                     record in Address.query.order_by('address').all()]))
 
+
 def get_spammers():
     """ Return an up-to-date list of spammers from the main repo text file """
     with open(os.path.join(basename, "git_dir", 'spammers.txt'), 'r') as f:
@@ -128,6 +130,7 @@ def get_spammers():
     # trim the " OR" and final newline from the entries
     # FIXME: this is a bit fragile
     return [spammer.split()[0] for spammer in spammers]
+
 
 def pull_request(our_sha, their_sha):
     """ Open a pull request on the main repo """
@@ -150,6 +153,7 @@ def pull_request(our_sha, their_sha):
         return False
     return True
 
+
 def repo_checkout():
     """ Ensure that the spammers.txt we're comparing is from origin/master """
     git = repo.git
@@ -162,22 +166,25 @@ def repo_checkout():
         app.logger.critical("Couldn't check out latest spammers.txt: %s" % e)
         abort(500)
 
+
 def update_db():
     """ Add any missing spammers to our app DB """
     # pull all branches from origin, and force-checkout master
     repo_checkout()
     their_spammers = set(get_spammers())
-    our_spammers = set(addr.address.strip() for addr in
+    our_spammers = set(
+        addr.address.strip() for addr in
         Address.query.order_by('address').all())
     to_update = list(their_spammers - our_spammers)
     if to_update:
-        db.session.add_all([Address(address=new_addr) for
-            new_addr in to_update])
+        db.session.add_all(
+            [Address(address=new_addr) for new_addr in to_update])
     # reset sync timestamp
     latest = UpdateCheck.query.first() or UpdateCheck()
     latest.timestamp = utcnow_()
     db.session.add(latest)
     db.session.commit()
+
 
 def sync_check():
     """
