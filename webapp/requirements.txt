@@ -19,4 +19,3 @@ yuicompressor==2.4.7
 GitPython==0.3.2.RC1
 Requests
 humanize
-webassets==dev
