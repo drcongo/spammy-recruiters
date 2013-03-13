@@ -26,7 +26,7 @@ def build():
     virtualenv.build()
     alembic_init.build()
     # run alembic migrations
-    local('fab upgrade_db')
+    upgrade_db()
 
 @task
 def run_app():

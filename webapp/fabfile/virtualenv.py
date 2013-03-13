@@ -22,7 +22,7 @@ def build():
                 print(red(pupgrade))
                 abort("pip upgrade unsuccessful %i" % pupgrade.return_code)
             # http://www.pip-installer.org/en/latest/cookbook.html#fast-local-installs
-            do('mkdir pyarchives', capture=True)
+            do('mkdir -p pyarchives', capture=True)
             do('venv/bin/pip install --download pyarchives -r requirements.txt')
             pip = do(
                 'venv/bin/pip install --no-index --find-links=file://vagrant/pyarchives -r requirements.txt --upgrade',
