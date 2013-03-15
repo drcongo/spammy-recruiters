@@ -1,4 +1,4 @@
-.vagrant
+webapp/.vagrant
 venv
 pyarchives
 .pip
