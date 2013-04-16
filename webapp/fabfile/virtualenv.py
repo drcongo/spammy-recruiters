@@ -1,3 +1,4 @@
+import os
 from fabric.decorators import task
 from fabric.context_managers import settings, hide
 from fabric.colors import cyan, red
@@ -23,7 +24,10 @@ def build():
                 abort("pip upgrade unsuccessful %i" % pupgrade.return_code)
             # http://www.pip-installer.org/en/latest/cookbook.html#fast-local-installs
             do('mkdir -p pyarchives', capture=True)
-            do('venv/bin/pip install --download pyarchives -r requirements.txt')
+            do('venv/bin/pip install -v --download pyarchives -r requirements.txt --index-url=https://simple.crate.io --upgrade')
+            # if webassets==dev exists, rename it
+            if os.path.exists("pyarchives/master"):
+                os.rename("pyarchives/master", "pyarchives/webassets-dev.tar.gz")
             pip = do(
                 'venv/bin/pip install --no-index --find-links=file://vagrant/pyarchives -r requirements.txt --upgrade',
                 capture=True)
