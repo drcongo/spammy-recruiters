@@ -2,7 +2,7 @@
 
 ## Before you open a pull request, please try to do the following ##
 
-If you're adding a new address, try to add it to the existing list in the correct place, i.e., in **descending alphabetical order**.
+If you're adding a new address, try to add it to the existing list in the correct place, i.e., in **ascending alphabetical order**.
 
 Example:
 
@@ -14,7 +14,7 @@ You'd like to add `@enterprise-weasels.com`, so it goes in position 3. The list 
 
     @abc-recruit.com OR 
     @def-workers.net OR 
-    @enterprise weasels.com OR 
+    @enterprise-weasels.com OR 
     @geb-something.co.uk 
 
 Addresses should have the following format:
@@ -30,6 +30,7 @@ The only exception to this rule is when adding a domain to the end of the list. 
 
     @recruiter.co.uk[space]
 
+Remember to add an `OR` to the penultimate line.
 
 **Please ensure that the last line in your file is blank**
 
