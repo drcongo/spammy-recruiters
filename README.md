@@ -49,3 +49,9 @@ If you actually use any of the companies in this list, you might want to do two 
 
 1. Web interface for people not familiar with Git
 2. Automatic subscription to the filter?
+
+#### Analytics ####
+
+Yes, I am tracking you.
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/5ad74574512785c24fc63d7448ab2be9 "githalytics.com")](http://githalytics.com/drcongo/spammy-recruiters)
