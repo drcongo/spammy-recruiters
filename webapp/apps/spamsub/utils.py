@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Utility functions for interacting with our Git repos
 """
@@ -8,6 +9,7 @@ from datetime import datetime, timedelta
 from apps.shared.models import db
 from apps.shared.models import utcnow as utcnow_
 from flask import abort, flash, render_template
+from flask import current_app as app
 from models import *
 from git import Repo
 from git.exc import *
