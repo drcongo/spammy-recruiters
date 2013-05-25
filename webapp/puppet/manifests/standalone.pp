@@ -29,3 +29,8 @@ postgresql::db{ 'app_db':
   password      => 'flask_pass',
   grant         => 'all',
 }
+# set git user params
+git::repo{'repo_name':
+ path   => '/vagrant/apps/spamsub/git_dir',
+ source => 'git://github.com/drcongo/spammy-recruiters.git'
+}
