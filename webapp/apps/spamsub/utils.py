@@ -5,6 +5,7 @@ Utility functions for interacting with our Git repos
 import os
 import json
 from datetime import datetime, timedelta
+import base64
 
 from apps.shared.models import db
 from apps.shared.models import utcnow as utcnow_
@@ -69,6 +70,7 @@ def write_new_spammers():
 
     TODO: tidy up remote integration branches
     """
+    git = repo.git
     errs = False
     # pull all branches from origin, and force-checkout master
     repo_checkout()
@@ -77,6 +79,12 @@ def write_new_spammers():
         "%Y_%b_%d_%H_%M_%S")
     git.checkout(b=newbranch)
     index = repo.index
+    # get existing spammers.txt SHA
+    hc = repo.head.commit
+    htc = hc.tree
+    # FIXME: we shouldn't be getting the blob by position
+    existing_blob = htc.blobs[2].hexsha
+    existing_branch = hc.hexsha  # existing master SHA
     # re-generate spammers.txt
     try:
         output(filename="spammers.txt")
@@ -85,17 +93,55 @@ def write_new_spammers():
         repo.heads.master.checkout(f=True)
         git.branch(newbranch, D=True)
         errs = True
+    # Base64-encode new file
+    with open(os.path.join(basename, "git_dir", "spammers.txt"), "r") as enc:
+        encoded = base64.b64encode(enc.read())
     # add spammers.txt to local integration branch
     try:
         index.add(['spammers.txt'])
         index.commit("Updating Spammers on %s" % now)
+        # create remote branch
+        newbranch_payload = {
+            "ref": "refs/heads/%s" % newbranch,
+            "sha": existing_branch
+        }
+        headers = {
+            "Authorization": 'token %s' % app.config['GITHUB_TOKEN'],
+        }
+        newbranch_req = requests.post(
+            "https://api.github.com/repos/drcongo/spammy-recruiters/git/refs",
+            data=json.dumps(newbranch_payload),
+            headers=headers
+        )
+        try:
+            newbranch_req.raise_for_status()
+        except HTTPError as e:
+            app.logger.error("Couldn't update via API. Error: %s" % e)
+            return False
         # push local repo to webapp's remote
-        our_remote.push(newbranch)
+        payload = {
+            "message": "Updating Spammers on %s" % now,
+            "committer": {
+                "name": u'Spammy Recruiter Bot',
+                "email": "urschrei@gmail.com"
+            },
+            "content": encoded,
+            "sha": existing_blob,
+            "branch": newbranch
+        }
+        req = requests.put(
+            "https://api.github.com/repos/drcongo/spammy-recruiters/contents/spammers.txt",
+            data=json.dumps(payload), headers=headers)
+        try:
+            req.raise_for_status()
+        except HTTPError as e:
+            app.logger.error("Couldn't update via API. Error: %s" % e)
+            return False
     except GitCommandError as e:
         errs = True
         app.logger.error("Couldn't push to staging remote. Err: %s" % e)
     # send pull request to main remote
-    our_sha = "urschrei:%s" % newbranch
+    our_sha = "drcongo:%s" % newbranch
     their_sha = 'master'
     if not errs and pull_request(our_sha, their_sha):
         # delete our local integration branch, and reset counter
