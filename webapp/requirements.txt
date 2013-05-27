@@ -21,3 +21,4 @@ Requests
 humanize
 ipython
 webassets==dev
+fabric-virtualenv

@@ -20,13 +20,13 @@ alembic_cfg = Config(os.path.join(
 alembic_cfg.set_main_option(
     "sqlalchemy.url", "postgresql://flask_user:flask_pass@localhost/app_db")
 
+
 @task
 def build():
     """Execute build tasks for all components."""
     virtualenv.build()
     alembic_init.build()
-    # run alembic migrations
-    upgrade_db()
+
 
 @task
 def run_app():
@@ -37,6 +37,7 @@ def run_app():
         # clean up any *.pyc files in our app dir
         local('export DEV_CONFIGURATION=`pwd`/config/dev.py && venv/bin/python ./run.py')
 
+
 @task
 def shell():
     """
@@ -44,6 +45,7 @@ def shell():
     """
     with cd(env.basename):
         local('export DEV_CONFIGURATION=`pwd`/config/dev.py && venv/bin/ipython -i -c "%run shell.py"')
+
 
 # Alembic stuff. See http://alembic.readthedocs.org/en/latest/api.html
 @task
@@ -53,6 +55,7 @@ def revision(msg):
     """
     command.revision(alembic_cfg, message=msg)
 
+
 @task
 def upgrade_db(rev="head"):
     """
@@ -60,6 +63,7 @@ def upgrade_db(rev="head"):
     """
     print(cyan("Running Alembic migrations, upgrading DB to %s" % rev))
     command.upgrade(alembic_cfg, rev)
+
 
 @task
 def downgrade_db(rev="base"):
