@@ -244,6 +244,8 @@ def sync_check():
         latest = UpdateCheck()
         db.session.add(latest)
         db.session.commit()
+        # we have to refresh the DB, since it's unpopulated
+        update_db()
     elapsed = datetime.utcnow() - latest.timestamp
     if abs(elapsed.total_seconds()) > 3600:
         update_db()
