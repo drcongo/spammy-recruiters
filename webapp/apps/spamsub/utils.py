@@ -84,7 +84,7 @@ def write_new_spammers():
     htc = hc.tree
     # FIXME: we shouldn't be getting the blob by position
     existing_blob = htc.blobs[2].hexsha
-    existing_branch = hc.hexsha  # existing master SHA
+    existing_branch = hc.hexsha  # existing Master branch SHA
     # re-generate spammers.txt
     try:
         output(filename="spammers.txt")
@@ -100,7 +100,7 @@ def write_new_spammers():
     try:
         index.add(['spammers.txt'])
         index.commit("Updating Spammers on %s" % now)
-        # create remote branch
+        # create remote integration branch
         newbranch_payload = {
             "ref": "refs/heads/%s" % newbranch,
             "sha": existing_branch
@@ -116,9 +116,11 @@ def write_new_spammers():
         try:
             newbranch_req.raise_for_status()
         except HTTPError as e:
-            app.logger.error("Couldn't update via API. Error: %s" % e)
+            app.logger.error("Couldn't create remote branch. Error: %s" % e)
+            repo.heads.master.checkout(f=True)
+            git.branch(newbranch, D=True)
             return False
-        # push local repo to webapp's remote
+        # push local integration branch to remote integration branch
         payload = {
             "message": "Updating Spammers on %s" % now,
             "committer": {
@@ -131,16 +133,19 @@ def write_new_spammers():
         }
         req = requests.put(
             "https://api.github.com/repos/drcongo/spammy-recruiters/contents/spammers.txt",
-            data=json.dumps(payload), headers=headers)
+            data=json.dumps(payload),
+            headers=headers)
         try:
             req.raise_for_status()
         except HTTPError as e:
-            app.logger.error("Couldn't update via API. Error: %s" % e)
+            app.logger.error("Couldn't push to integration branch via API. Error: %s" % e)
+            repo.heads.master.checkout(f=True)
+            git.branch(newbranch, D=True)
             return False
     except GitCommandError as e:
         errs = True
-        app.logger.error("Couldn't push to staging remote. Err: %s" % e)
-    # send pull request to main remote
+        app.logger.error("Couldn't add spammers to index. Err: %s" % e)
+    # create pull request between integration branch and Master
     our_sha = "drcongo:%s" % newbranch
     their_sha = 'master'
     if not errs and pull_request(our_sha, their_sha):
@@ -181,7 +186,7 @@ def get_spammers():
 
 
 def pull_request(our_sha, their_sha):
-    """ Open a pull request on the main repo """
+    """ Open a pull request on Master """
     payload = {
         "title": "Updated Spammers on %s" % now,
         "body": "Updates from the webapp",
@@ -193,7 +198,8 @@ def pull_request(our_sha, their_sha):
     }
     req = requests.post(
         "https://api.github.com/repos/drcongo/spammy-recruiters/pulls",
-        data=json.dumps(payload), headers=headers)
+        data=json.dumps(payload),
+        headers=headers)
     try:
         req.raise_for_status()
     except HTTPError as e:
