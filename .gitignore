@@ -1,4 +1,8 @@
 webapp/.vagrant
+webapp/apps/spamsub/git_dir/
+webapp/config/sensitive.py
+webapp/static/.webassets-cache/
+webapp/static/gen/
 venv
 pyarchives
 .pip
