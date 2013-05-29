@@ -48,7 +48,8 @@ def check_if_exists(address):
         # otherwise, pull updates from GitHub, and check again
         update_db()
     if not Address.exists(normalised):
-        db.session.add(Address(address=normalised))
+        # set 'pending' to true
+        db.session.add(Address(address=normalised, pending=True))
         count = Counter.query.first()
         if not count:
             count = Counter(0)
@@ -167,6 +168,8 @@ try again later, though, and they <em>have</em> been saved.", "text-error"
         )
 
 
+# FIXME figure out how to integrate this with 'pending' addresses
+# in order to avoid duplicate entries in pull requests
 def output(filename, template="output.jinja"):
     """ write filename to the git directory, using the specified template """
     with open(os.path.join(basename, "git_dir", filename), "w") as f:
@@ -226,13 +229,22 @@ def update_db():
     # pull all branches from origin, and force-checkout master
     repo_checkout()
     their_spammers = set(get_spammers())
+    # filter 'pending' addresses from the DB
     our_spammers = set(
         addr.address.strip() for addr in
-        Address.query.order_by('address').all())
+        Address.query.filter_by(pending=False).order_by('address').all())
     to_update = list(their_spammers - our_spammers)
     if to_update:
-        db.session.add_all(
-            [Address(address=new_addr) for new_addr in to_update])
+        records = []
+        for record in to_update:
+            try:
+                # update 'pending' to false
+                to_update = Address.query.filter_by(address=record).one()
+                to_update.pending = False
+                records.append(to_update)
+            except NoResultFound:
+                records.append(Address(address=new_addr, pending=False))
+        db.session.add_all(records)
     # reset sync timestamp
     latest = UpdateCheck.query.first() or UpdateCheck()
     latest.timestamp = utcnow_()

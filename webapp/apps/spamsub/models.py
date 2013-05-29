@@ -14,9 +14,13 @@ class Address(db.Model, AppMixin):
     count = db.Column(
         db.Integer(),
         default=1)
+    pending = db.Column(
+        db.Boolean(),
+        default=True)
 
-    def __init__(self, address):
+    def __init__(self, address, pending):
         self.address = address
+        self.pending = pending
 
     @classmethod
     def exists(self, address):
