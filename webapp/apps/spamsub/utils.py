@@ -12,6 +12,8 @@ from apps.shared.models import utcnow as utcnow_
 from flask import abort, flash, render_template
 from flask import current_app as app
 from models import *
+from sqlalchemy import or_
+from sqlalchemy.orm.exc import NoResultFound
 from git import Repo
 from git.exc import *
 from requests.exceptions import HTTPError
@@ -49,7 +51,11 @@ def check_if_exists(address):
         update_db()
     if not Address.exists(normalised):
         # set 'pending' to true
-        db.session.add(Address(address=normalised, pending=True))
+        db.session.add(Address(
+            address=normalised,
+            pending=True,
+            sent=False,
+            complete=False))
         count = Counter.query.first()
         if not count:
             count = Counter(0)
@@ -101,6 +107,7 @@ def write_new_spammers():
     try:
         index.add(['spammers.txt'])
         index.commit("Updating Spammers on %s" % now)
+        return
         # create remote integration branch
         newbranch_payload = {
             "ref": "refs/heads/%s" % newbranch,
@@ -158,6 +165,9 @@ def write_new_spammers():
         db.session.commit()
         git.checkout("master")
         git.branch(newbranch, D=True)
+        # mark any pending addresses as sent, to avoid re-generation
+        Address.query.filter_by(pending=True).update({'sent': True}, False)
+        db.session.commit()
     else:
         # register an error
         errs = True
@@ -168,15 +178,23 @@ try again later, though, and they <em>have</em> been saved.", "text-error"
         )
 
 
-# FIXME figure out how to integrate this with 'pending' addresses
-# in order to avoid duplicate entries in pull requests
 def output(filename, template="output.jinja"):
-    """ write filename to the git directory, using the specified template """
+    """
+    Write filename to the git directory, using the specified template
+    The records we want in the pull request are:
+    - All records on Github (.complete is True)
+    - All records not yet sent (.sent is False, which implies pending is True)
+    if the write is successful, update all pending records.sent to True
+    """
     with open(os.path.join(basename, "git_dir", filename), "w") as f:
             f.write(render_template(
                 template,
                 addresses=[record.address.strip() for
-                    record in Address.query.order_by('address').all()]))
+                    record in Address.query.
+                    filter(or_(
+                        Address.complete,
+                        ~Address.sent)).
+                    order_by('address').all()]))
 
 
 def get_spammers():
@@ -215,8 +233,8 @@ def repo_checkout():
     """ Ensure that the spammers.txt we're comparing is from origin/master """
     git = repo.git
     try:
-        git.pull(all=True)
         repo.heads.master.checkout(f=True)
+        git.pull(all=True)
         git.checkout("spammers.txt", f=True)
     except (GitCommandError, CheckoutError) as e:
         # Not much point carrying on without the latest spammer file
@@ -229,10 +247,9 @@ def update_db():
     # pull all branches from origin, and force-checkout master
     repo_checkout()
     their_spammers = set(get_spammers())
-    # filter 'pending' addresses from the DB
     our_spammers = set(
         addr.address.strip() for addr in
-        Address.query.filter_by(pending=False).order_by('address').all())
+        Address.query.order_by('address').all())
     to_update = list(their_spammers - our_spammers)
     if to_update:
         records = []
@@ -241,9 +258,15 @@ def update_db():
                 # update 'pending' to false
                 to_update = Address.query.filter_by(address=record).one()
                 to_update.pending = False
+                to_update.sent = True
+                to_update.complete = True
                 records.append(to_update)
             except NoResultFound:
-                records.append(Address(address=new_addr, pending=False))
+                records.append(Address(
+                    address=record,
+                    pending=False,
+                    sent=True,
+                    complete=True))
         db.session.add_all(records)
     # reset sync timestamp
     latest = UpdateCheck.query.first() or UpdateCheck()

@@ -17,10 +17,18 @@ class Address(db.Model, AppMixin):
     pending = db.Column(
         db.Boolean(),
         default=True)
+    sent = db.Column(
+        db.Boolean(),
+        default=False)
+    complete = db.Column(
+        db.Boolean(),
+        default=False)
 
-    def __init__(self, address, pending):
+    def __init__(self, address, pending, sent, complete):
         self.address = address
         self.pending = pending
+        self.sent = sent
+        self.complete = complete
 
     @classmethod
     def exists(self, address):
