@@ -10,7 +10,7 @@ If you do get involved, please have a look at the [contributing guidelines](http
 
 ## Note ##
 
-This list is now too long to fit into a single Gmail filter, so you'll probably want to create two. One for a to m, and another for n to z.
+A single Gmail filter can (at time of writing) accommodate 59 domains so you will need to split the file up accordingly.
 
 ## Protip ##
 
