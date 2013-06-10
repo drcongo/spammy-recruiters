@@ -25,7 +25,6 @@
 @digitalgurus.co.uk OR 
 @direct-recruitment.co.uk OR 
 @e-recruiter.co.uk OR 
-@ecomrecruitment.com OR 
 @elitejobs.eu.com OR 
 @esynergy-solutions.co.uk OR 
 @etrust.org.uk OR 
@@ -51,7 +50,6 @@
 @jobstheword.co.uk OR 
 @jp-engineering.co.uk OR 
 @jp-jobs.com OR 
-@levesongower.co.uk OR 
 @marcusdonald.com OR 
 @matchtech.com OR 
 @mcgregor-boyall.com OR 
@@ -86,7 +84,6 @@
 @rightfutures.com OR 
 @roc-search.com OR 
 @senitor.com OR 
-@shareforce.co.uk OR 
 @sherborneselection.co.uk OR 
 @skillsearch.com OR 
 @spring.com OR 
