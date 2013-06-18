@@ -50,6 +50,10 @@ If you actually use any of the companies in this list, you might want to do two 
 1. Web interface for people not familiar with Git
 2. Automatic subscription to the filter?
 
+#### Honourable Mention ####
+
+You might also be interested in [this list](https://github.com/alexmbird/uk-it-recruiter-domains) maintained by Alex Hewson.
+
 #### Analytics ####
 
 Yes, I am tracking you.
