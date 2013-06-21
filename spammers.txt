@@ -2,6 +2,7 @@
 @abrs.com OR 
 @alexanderash.com OR 
 @alexanderblackrecruitment.co.uk OR 
+@amoriabond.com OR 
 @applauseit.co.uk OR 
 @ascentsourcing.com OR 
 @asginternational.co.uk OR 
@@ -22,6 +23,7 @@
 @consortia.co.uk OR 
 @creationrecruitment.co.uk OR 
 @danielmarkslondon.com OR 
+@devpeople.co.uk OR 
 @digitalgurus.co.uk OR 
 @direct-recruitment.co.uk OR 
 @e-recruiter.co.uk OR 
@@ -33,6 +35,7 @@
 @evosearch.co.uk OR 
 @explore-group.com OR 
 @explorerec.com OR 
+@g2recruitment.com OR 
 @gcsltd.com OR 
 @gravitasrecruitmentgroup.com OR 
 @gregoryjamesgroup.com OR 
@@ -47,6 +50,7 @@
 @involvedsolutions.com OR 
 @it-talent.co.uk OR 
 @ithr.com OR 
+@jcomresources.co.uk OR 
 @jobstheword.co.uk OR 
 @jp-engineering.co.uk OR 
 @jp-jobs.com OR 
@@ -99,5 +103,7 @@
 @ulocate.eu OR 
 @venngroup.com OR 
 @verticalit.co.uk OR 
+@vividresourcing.com OR 
+@vresource.co.uk OR 
 @xactplacements.co.uk OR 
 @xcedesolutions.com
