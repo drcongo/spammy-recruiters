@@ -32,8 +32,8 @@ class Address(db.Model, AppMixin):
 
     @classmethod
     def exists(self, address):
-        """ Check if an address exists, increment counter if it does """
-        exsts = self.query.filter_by(address=address).first()
+        """ Check if an unmerged address exists, increment counter if it does """
+        exsts = self.query.filter_by(address=address, complete=False).first()
         if exsts:
             exsts.count += 1
             db.session.add(exsts)
