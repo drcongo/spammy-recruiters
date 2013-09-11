@@ -107,7 +107,6 @@ def write_new_spammers():
     try:
         index.add(['spammers.txt'])
         index.commit("Updating Spammers on %s" % now)
-        return
         # create remote integration branch
         newbranch_payload = {
             "ref": "refs/heads/%s" % newbranch,
