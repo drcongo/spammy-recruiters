@@ -33,6 +33,8 @@ Install the Canned Response plugin from Google Labs (it's in `Settings --> Labs 
 
 Make sure to have the filter also flag it as spam and delete it.
 
+[Multiple Senders](https://support.google.com/mail/answer/8870?topic=12859)
+
 ## What to do if you find your company on this list ##
 
 1. Stop shitting in the inboxes of busy people.
