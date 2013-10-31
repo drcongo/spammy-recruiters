@@ -37,6 +37,7 @@ Make sure to have the filter also flag it as spam and delete it.
 
 1. Stop shitting in the inboxes of busy people.
 2. Leave and go work for a company with some ethics.
+3. Read [this](https://github.com/vzaar/note-to-recruiters/blob/master/ntr.md)
 
 ###  And finally ###
 
@@ -44,7 +45,7 @@ If you actually use any of the companies in this list, you might want to do two 
 
 1. Remove them from your filter
 2. Think about using a different recruitment company that doesn't spam people.
-3. Read [this](https://github.com/vzaar/note-to-recruiters/blob/master/ntr.md)
+
 
 #### To do ####
 
