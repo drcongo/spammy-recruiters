@@ -63,3 +63,7 @@ You might also be interested in [this list](https://github.com/alexmbird/uk-it-r
 Yes, I am tracking you.
 
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/5ad74574512785c24fc63d7448ab2be9 "githalytics.com")](http://githalytics.com/drcongo/spammy-recruiters)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/drcongo/spammy-recruiters/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
