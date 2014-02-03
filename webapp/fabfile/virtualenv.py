@@ -24,7 +24,7 @@ def build():
                 abort("pip upgrade unsuccessful %i" % pupgrade.return_code)
             # http://www.pip-installer.org/en/latest/cookbook.html#fast-local-installs
             do('mkdir -p pyarchives', capture=True)
-            do('venv/bin/pip install -v --download pyarchives -r requirements.txt --index-url=https://simple.crate.io --upgrade')
+            do('venv/bin/pip install -v --download pyarchives -r requirements.txt --index-url=https://pypi.python.org/simple/ --use-mirrors --upgrade')
             # if webassets==dev exists, rename it
             if os.path.exists("pyarchives/master"):
                 os.rename("pyarchives/master", "pyarchives/webassets-dev.tar.gz")
