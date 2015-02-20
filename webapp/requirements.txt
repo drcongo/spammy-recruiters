@@ -16,5 +16,4 @@ GitPython==0.3.2.RC1
 Requests
 humanize
 ipython
-webassets==dev
 fabric-virtualenv
