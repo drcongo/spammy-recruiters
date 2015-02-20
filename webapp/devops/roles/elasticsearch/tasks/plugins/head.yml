@@ -1,0 +1,12 @@
+---
+
+- name: get installed ES plugins list
+  shell: /usr/share/elasticsearch/bin/plugin -l
+  tags: eshead
+  register: head_plugin
+  changed_when: false
+
+- name: install head plugin
+  shell: /usr/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
+  tags: eshead
+  when: '"- head" not in head_plugin.stdout'

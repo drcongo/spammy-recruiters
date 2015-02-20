@@ -6,7 +6,7 @@
 import os
 from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.assets import Environment
+from flask.ext.assets import Environment, Bundle
 from webassets.loaders import YAMLLoader
 import locale
 import logging
@@ -27,8 +27,8 @@ try:
     app.config.from_pyfile('config/sensitive.py')
 except IOError:
     pass
-if os.getenv('SPAMSUB_CONFIGURATION'):
-    app.config.from_envvar('SPAMSUB_CONFIGURATION')
+if os.getenv('DEV_CONFIGURATION'):
+    app.config.from_envvar('DEV_CONFIGURATION')
 
 # attach assets
 assets = Environment(app)

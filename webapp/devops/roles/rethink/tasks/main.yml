@@ -1,0 +1,48 @@
+---
+
+- name: make sure apt-add-repository is installed
+  apt: pkg=python-software-properties state=present #software-properties-common for Ubuntu 12.10 and later
+
+- name: add rethinkdb apt repo
+  apt_repository: repo='ppa:rethinkdb/ppa'
+
+- name: update apt
+  apt: update_cache=yes
+
+- name: install rethinkdb
+  apt: pkg=rethinkdb state=present force=yes
+
+
+# Is this a DB-Master? (Yes if you're running a single instance)
+- name: ensure group is present
+  group: name=rethinkdb state=present
+  when: rethink.master == True
+
+- name: ensure user is present
+  user: name=rethinkdb state=present createhome=no group=rethinkdb
+  when: rethink.master == True
+
+- name: make sure we have write permissions on the instances.d directory
+  file: path=/etc/rethinkdb/instances.d/ state=directory mode=664 owner=rethinkdb group=rethinkdb
+  when: rethink.master == True
+
+- name: copy master config file
+  file: src=rethink-master.conf dest=/etc/rethinkdb/instances.d/rethink-master.conf owner=rethinkdb group=rethinkdb mode=664
+  notify: restart rethink
+  when: rethink.master == True
+
+
+# Is this a slave?
+- name: ensure group is present
+  group: name=rethinkdb state=present
+  when: rethink.slave == True
+
+- name: ensure user is present
+  user: name=rethinkdb state=present
+  when: rethink.slave == True
+
+- name: copy slave template
+  template: src=rethink-slave.conf.j2 dest=/etc/rethinkdb/instances.d/rethink-slave.conf owner=rethinkdb group=rethinkdb mode=664
+  notify: restart rethink
+  when: rethink.slave == True
+

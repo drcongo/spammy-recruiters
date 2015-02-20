@@ -1,0 +1,22 @@
+---
+hostname: spamsub.com
+domain: spamsub
+tld: com
+
+app_name: spamsub
+webapps_dir: /srv/www
+
+user: deploy
+app_dir: /srv/www
+
+# Supervisor
+supervisor_user: deploy
+supervisor_group: deploy
+
+
+# set the SERVER_ENV vaiable in gunicorn
+gunicorn_env: SERVER_ENV=production
+
+
+# See the main README for how to generate this...
+deploy_password: 

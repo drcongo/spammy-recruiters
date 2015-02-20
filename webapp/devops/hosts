@@ -1,0 +1,12 @@
+[vagrant]
+10.11.12.15
+
+[staging]
+
+
+[production]
+
+
+[remote:children]
+staging
+production

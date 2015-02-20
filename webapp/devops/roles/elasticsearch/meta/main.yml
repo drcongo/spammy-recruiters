@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: "Pierre Mavro"
+  company: 
+  license: GPL
+  min_ansible_version: 1.4
+  platforms:
+   - name: Debian
+     versions:
+      - wheezy
+  categories:
+   - database
+   - database:nosql
+dependencies: []
+

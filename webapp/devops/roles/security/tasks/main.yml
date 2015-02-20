@@ -1,0 +1,49 @@
+---
+
+  - name: Security | Update APT package cache
+    action: apt update_cache=yes
+
+  - name: Security | Install fail2ban
+    action: apt pkg=fail2ban state=installed
+
+  - name: Security | Whitelist IP addresses in fail2ban
+    action: lineinfile dest=/etc/fail2ban/jail.conf regexp="^ignoreip = 127.0.0.1/8" line="ignoreip = 127.0.0.1/8 {{ ip_whitelist }}"
+  
+  - name: Security | Add deployment user
+    action: user name=deploy password={{ deploy_password }}
+  
+  - name: Security | Add authorized deploy key
+    action: authorized_key user=deploy key='$FILE(../keys/deploy_key.pub)'
+  
+  - name: Security | Remove sudo group rights
+    action: lineinfile dest=/etc/sudoers regexp="^%sudo" state=absent
+  
+  - name: Security | Add deploy user to sudoers
+    action: lineinfile dest=/etc/sudoers regexp="deploy ALL" line="deploy ALL=(ALL) ALL" state=present
+    notify: Restart sshd
+  
+  - name: Security | Disallow password authentication
+    action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+    notify: Restart sshd
+  
+  - name: Security | Install unattended-upgrades
+    action: apt pkg=unattended-upgrades state=present
+  
+  - name: Security | Adjust APT update intervals
+    copy: src=apt_periodic dest=/etc/apt/apt.conf.d/10periodic
+  
+  - name: Security | Make sure unattended-upgrades only installs from $ubuntu_release-security
+    action: lineinfile dest=/etc/apt/apt.conf.d/50unattended-upgrades regexp="$ubuntu_release-updates" state=absent
+  
+  - name: Security | Copy debconf selections so that Postfix can configure itself non-interactively
+    copy: src=postfix_selections  dest=/tmp/postfix_selections
+  
+  - name: Security | Set up Postfix to relay mail
+    action: command debconf-set-selections /tmp/postfix_selections
+  
+  - name: Security | Install logwatch
+    action: apt pkg=logwatch state=installed
+  
+  - name: Security | Make logwatch mail $logwatch_email daily
+    action: lineinfile dest=/etc/cron.daily/00logwatch regexp="^/usr/sbin/logwatch" line="/usr/sbin/logwatch --output mail --mailto $logwatch_email --detail high" state=present create=yes
+

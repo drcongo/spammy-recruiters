@@ -1,0 +1,18 @@
+---
+
+# Head plugin
+- include: plugins/head.yml
+  when: install_head is defined and install_head
+
+# Marvel plugin
+- include: plugins/marvel.yml
+  when: install_marvel is defined and install_marvel
+
+# ElasticHQ plugin
+- include: plugins/elastichq.yml
+  when: install_eshq is defined and install_eshq
+
+# Curator tool
+- include: plugins/curator.yml
+  when: install_curator is defined and install_curator
+

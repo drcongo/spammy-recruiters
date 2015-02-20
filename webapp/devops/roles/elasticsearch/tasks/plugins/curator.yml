@@ -1,0 +1,10 @@
+---
+# Install dependancies
+- apt: name=python-pip state=present
+
+# Install Curator
+- pip: name=elasticsearch-curator
+
+- name: install curator crontab
+  cron: cron_file=curator minute=30 hour=23 job="curator --host {{ es_fqdn }} -d {{ max_keep_days | default(360) }}" user="root" name="curator"
+

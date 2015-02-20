@@ -1,0 +1,39 @@
+---
+# Install elasticsearch
+
+# install apt key
+- apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch state=present
+
+# set dedicated repository
+- apt_repository: repo='deb http://packages.elasticsearch.org/elasticsearch/{{es_version}}/debian stable main' state=present
+
+# install elasticsearch with dependencies
+- name: purge ntp
+  command: apparmor_parser -R /etc/apparmor.d/usr.sbin.ntpd
+  ignore_errors: yes
+
+- name: remove ntp
+  apt: name=foo state=absent purge=yes
+  ignore_errors: yes
+
+- name: install elasticsearch
+  apt: name={{ item }} state=latest force=yes
+  tags: elasticsearch
+  with_items:
+    - elasticsearch
+    - openjdk-7-jre-headless
+  notify: init elasticsearch
+
+# set limits.conf
+- name: limits.conf tuning
+  lineinfile: dest=/etc/security/limits.conf line="{{ item }}" 
+  tags: elasticsearch
+  with_items:
+    - 'elasticsearch soft nofile 32000'
+    - 'elasticsearch hard nofile 32000'
+
+# ensure service started
+- service: name=elasticsearch state=started
+
+# install plugins
+- include: plugins.yml

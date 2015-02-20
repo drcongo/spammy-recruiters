@@ -1,0 +1,26 @@
+---
+mysql_port: 3306
+mysql_bind_address: '127.0.0.1'
+mysql_root_db_pass: ''
+mysql_data_dir: /var/lib/mysql
+mysql_state: started
+mysql_enabled: 'yes'
+
+mysql_configs:
+- { name: 'query_cache_limit', value: '16M'}
+- { name: 'query_cache_size', value: '32M'}
+- { name: 'join_buffer_size', value: '32M'}
+- { name: 'thread_cache_size', value: '4'}
+- { name: 'innodb_rollback_on_timeout', value: '1'}
+- { name: 'innodb_buffer_pool_size', value: '128M'}
+- { name: 'innodb_log_file_size', value: '128M'}
+- { name: 'table_cache', value: '256'}
+
+mysql_db: []
+
+mysql_users: []
+
+mysql_repl_user: []
+
+# role '', master or slave
+mysql_repl_role: ''

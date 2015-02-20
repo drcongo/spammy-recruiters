@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: René Moser
+  company: Moser Systems
+  license: license (BSD)
+  min_ansible_version: 1.4
+  platforms:
+   - name: EL
+     versions:
+      - 6
+      - 7
+   - name: Ubuntu
+     versions:
+      - precise
+      - trusty
+   - name: Debian
+     versions:
+      - wheezy
+  categories:
+   - database:sql
+dependencies: []

@@ -1,0 +1,52 @@
+---
+
+# INSTALL
+
+- name: install supervisor
+  pip: name=supervisor
+
+- name: create supervisord config folder
+  file: dest=/etc/supervisor state=directory owner=root
+
+- name: create supervisord config
+  copy: src=supervisord.conf dest=/etc/supervisord.conf
+
+- name: create supervisord init script
+  copy: src=supervisord.sh dest=/etc/init.d/supervisord mode=0755
+
+- name: start supervisord service and have it run during system startup
+  service: name=supervisord state=started enabled=yes
+
+# CONFIGURE
+
+- name: create the supervisor log directory
+  file: name=/var/log/supervisor/ owner={{ user }} group={{ user }} mode=0766 state=directory
+
+- name: create the gunicorn log directory
+  file: name=/var/log/gunicorn/ owner={{ user }} group={{ user }} mode=0766 state=directory
+  when: gunicorn_env is defined
+
+
+- name: create log files for each supervisor app
+  file: dest=/var/log/supervisor/{{ item.name }}.log  owner={{ user }} group={{ user }} mode=0766 state=touch
+  with_items: supervisor_apps
+
+- name: touch the gunicorn log files
+  file: dest={{ item }}  owner={{ user }} group={{ user }} mode=0766 state=touch  
+  when: gunicorn_env is defined
+  with_items:
+    - /var/log/gunicorn/gunicorn-error.log
+    - /var/log/gunicorn/gunicorn-access.log
+
+- name: shutdown supervisorctl
+  command: supervisorctl shutdown
+
+- name: set up supervisor apps
+  template: src=supervisor.apps.ini dest=/etc/supervisor/{{ item.name }}.ini
+  with_items: supervisor_apps
+
+- name: restart supervisord
+  command: service supervisord restart
+
+- name: start supervisorctl
+  command: supervisorctl start

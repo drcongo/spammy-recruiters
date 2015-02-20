@@ -1,0 +1,13 @@
+- name: install telnet for manual testing
+  apt: pkg=telnet state=installed
+
+- name: Install memcached server
+  apt: pkg=memcached state=installed update-cache=yes
+
+- name: Install header files
+  apt: pkg=libmemcached-dev  state=installed update-cache=yes
+  when: memcached.install_development_headers == true
+
+- name: Install configuration file
+  template: src=memcached.conf.j2 dest=/etc/memcached.conf
+  notify: restart memcached

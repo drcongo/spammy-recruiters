@@ -1,0 +1,38 @@
+---
+
+- name: Update APT package cache
+  apt: update_cache=yes cache_valid_time=3600 upgrade=safe
+
+- name: Install python bits
+  action: apt pkg={{ item }} state=installed
+  with_items:
+    - python-dev
+    - libevent-dev
+    - python-setuptools
+    - python-keyczar
+    - python-pycurl
+    - python-pip
+
+- name: install ntpd so the server knows what the damn time is.
+  apt: pkg=ntp state=present
+
+- name: install software-properties-common for apt-add-repository
+  action: apt pkg=software-properties-common state=present
+
+- name: install useful stuff
+  action: apt pkg={{ item }} state=installed
+  with_items:
+    - build-essential
+    - git
+    - make
+
+- name: update apt
+  command: apt-get update
+
+- name: update bash to mitigate against shellshock
+  command: apt-get --only-upgrade install bash
+
+# - name: confirm that the shellshock fix is effective
+#   command: env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
+#   register: command_result
+#   failed_when: "'error' not in command_result.stderr"

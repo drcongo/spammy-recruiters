@@ -1,0 +1,44 @@
+---
+
+# IP address whitelist so that Fail2Ban doesn't lock you out
+ip_whitelist: 127.0.0.1
+
+
+# Install memcached development headers?
+memcached:
+  install_development_headers: true
+
+
+# app_name is the name of your Flask app
+app_name: app
+
+
+# Supervisor apps, included below is an example config for a flask app running on gunicorn.
+# Ansible will create ini files for each app.
+supervisor_apps:
+  -
+    name: spamsub
+    command: "{{ app_dir }}/venv/bin/gunicorn --env {{ gunicorn_env }} --error-logfile=/var/log/gunicorn/gunicorn-error.log --access-logfile=/var/log/gunicorn/gunicorn-access.log --log-level=WARNING app:app"
+    directory: '{{ app_dir }}'
+
+
+#PostgreSQL DBs, is a list in case you need more than one.
+postgres:
+-
+    name: app_db
+    user: flask_user
+    pass: flask_pass
+
+# elasticsearch
+es_version: 1.3
+es_fqdn: localhost
+es_port: 9200
+# Curator tool
+install_curator: False
+curator_max_keep_days: 90
+# Head plugin
+install_head: True
+# ElasticHQ plugin
+install_eshq: False
+# Marvel plugin
+install_marvel: False

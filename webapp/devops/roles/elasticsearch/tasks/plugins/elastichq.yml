@@ -1,0 +1,12 @@
+---
+
+- name: get installed ES plugins list
+  shell: /usr/share/elasticsearch/bin/plugin -l
+  tags: eshq
+  register: hq_plugin
+  changed_when: false
+
+- name: install hq plugin
+  shell: /usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ
+  tags: eshq
+  when: '"- HQ" not in hq_plugin.stdout'

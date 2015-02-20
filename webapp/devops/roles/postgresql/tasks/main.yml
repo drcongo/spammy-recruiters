@@ -1,0 +1,51 @@
+# Cribbed from https://github.com/ansible/ansible-examples/blob/master/language_features/postgresql.yml
+# and modified to move variables to group_vars. And updated to newer syntax. And munged into a role.
+# And added .pgpass
+---
+
+  - name: ensure apt cache is up to date
+    apt: update_cache=yes
+
+  - name: ensure packages are installed
+    apt: name={{ item }} state=installed
+    with_items:
+        - postgresql
+        - libpq-dev
+        - python-psycopg2
+
+  - name: ensure app user exists
+    postgresql_user: name={{ item.user }} password={{ item.pass }}
+    sudo: yes
+    sudo_user: postgres
+    with_items: postgres
+
+  - name: ensure database is created
+    postgresql_db: >
+      name={{ item.name }}
+      owner={{ item.user }}
+      template=template0
+      encoding=UTF8
+      lc_collate=en_GB.UTF-8
+      lc_ctype=en_GB.UTF-8
+    sudo: yes
+    sudo_user: postgres
+    with_items: postgres
+
+  - name: ensure user has access to database
+    postgresql_user: db={{ item.name }} name={{ item.user }} password={{ item.pass }} priv=ALL state=present
+    sudo: yes
+    sudo_user: postgres
+    with_items: postgres
+
+  - name: add .pgpass for root user
+    template: src=.pgpass dest=~/.pgpass
+    sudo: yes
+    sudo_user: root
+    with_items: postgres
+
+  - name: ensure user does not have unnecessary privilege
+    postgresql_user: name={{ item.user }} role_attr_flags=NOSUPERUSER,NOCREATEDB
+    notify: restart postgres
+    sudo: yes
+    sudo_user: postgres
+    with_items: postgres

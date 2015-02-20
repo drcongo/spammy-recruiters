@@ -1,0 +1,34 @@
+---
+
+  - name: Install | add nginx ppa
+    action: apt_repository repo=ppa:nginx/stable state=present
+
+  - name: Install | Install nginx
+    action: apt pkg=nginx state=present force=yes
+    notify: start nginx
+
+  - name: Install | remove default nginx site
+    action: file path=/etc/nginx/sites-enabled/default state=absent
+
+  - name: Install | write nginx.conf
+    action: file src=nginx.conf dest=/etc/nginx/nginx.conf
+    notify: restart nginx
+
+  # - name: Install | create the www folder
+  #   file: name=/srv/www owner=deploy group=deploy mode=0777 state=directory
+
+  # - name: Install | create the site folder
+  #   file: name=/srv/www/{{ hostname }} owner=deploy group=deploy mode=0777 state=directory
+
+
+# Configure
+
+  - name: Configure | add nginx site
+    action: template src=site.conf dest=/etc/nginx/sites-available/{{ domain }}.conf
+
+  - name: Configure | chmod the nginx log files
+    command: chmod -R 777 /var/log/nginx/
+
+  - name: Configure | enable nginx site
+    file: src=/etc/nginx/sites-available/{{ domain }}.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf owner=root group=root state=link
+    notify: restart nginx

@@ -1,0 +1,12 @@
+---
+
+- name: get installed ES plugins list
+  shell: /usr/share/elasticsearch/bin/plugin -l
+  tags: es_marvel
+  register: es_marvel
+  changed_when: false
+
+- name: install marvel plugin
+  shell: /usr/share/elasticsearch/bin/plugin -install elasticsearch/marvel/latest
+  tags: es_marvel
+  when: '"- marvel" not in es_marvel.stdout'

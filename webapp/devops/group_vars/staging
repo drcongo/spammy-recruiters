@@ -1,0 +1,20 @@
+---
+hostname: staging.spamsub.com 
+domain: spamsub
+tld: com
+
+# Where is the web app stored?
+webapps_dir: /srv/www
+
+user: deploy
+app_dir: /srv/www
+
+# Supervisor
+supervisor_user: deploy
+supervisor_group: deploy
+
+# set the SERVER_ENV variable in gunicorn
+gunicorn_env: SERVER_ENV=staging
+
+# See the main README for how to generate this...
+deploy_password:

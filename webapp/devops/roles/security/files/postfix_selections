@@ -1,0 +1,2 @@
+postfix/mailname string staging.top100.nominettrust.org.uk
+postfix/main_mailer_type string 'Internet Site'

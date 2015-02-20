@@ -1,0 +1,42 @@
+---
+
+- name: force install libjpeg-dev because Ubuntu
+  apt: pkg=libjpeg-dev state=installed force=true
+
+- name: install python bits
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - libevent-1.4-2
+    - libevent-dev
+    - libxml2-dev
+    - python2.7-dev
+    - python-dev
+    - python-setuptools
+    - python-imaging
+    - python-mysqldb
+    - python-psycopg2
+    - git
+    - build-essential
+
+
+- name: install pip
+  action: easy_install name=pip
+
+- name: install supervisor
+  pip: name=supervisor
+
+- name: install virtualenv
+  pip: name=virtualenv
+
+- name: install virtualenvwrapper
+  pip: name=virtualenvwrapper
+
+- name: Copy the requirements file to the server
+  copy: src=../../../../requirements.txt dest={{ app_dir }}/requirements.txt
+
+- name: Install requirements
+  pip: requirements={{ app_dir }}/requirements.txt virtualenv={{ app_dir }}/venv
+
+- name: install gunicorn
+  action: pip name=gunicorn virtualenv={{ app_dir }}/venv state=present
+  when: gunicorn_env is defined

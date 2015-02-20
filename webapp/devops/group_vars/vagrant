@@ -1,0 +1,21 @@
+---
+domain: spamsub
+tld: dev
+
+app_name: spamsub
+webapps_dir: /vagrant
+
+user: vagrant
+app_dir: /vagrant
+
+
+# Supervisor
+supervisor_user: vagrant
+supervisor_group: admin
+
+
+# set the SERVER_ENV variable in gunicorn
+gunicorn_env: SERVER_ENV=development
+
+# include the Less compiler when installing nodejs
+include_less: True

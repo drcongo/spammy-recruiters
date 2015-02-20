@@ -1,0 +1,55 @@
+# {{ ansible_managed }}
+[client]
+{% if mysql_port != 3306 %}
+port = {{ mysql_port }}
+{% endif %}
+socket = /var/run/mysqld/mysqld.sock
+
+# This was formally known as [safe_mysqld]. Both versions are currently parsed.
+[mysqld_safe]
+socket = /var/run/mysqld/mysqld.sock
+nice = 0
+
+[mysqld]
+user = mysql
+pid-file = /var/run/mysqld/mysqld.pid
+socket = /var/run/mysqld/mysqld.sock
+{% if mysql_port != 3306 %}
+port = {{ mysql_port }}
+{% endif %}
+basedir = /usr
+datadir = {{ mysql_data_dir }}
+tmpdir = /tmp
+lc-messages-dir = /usr/share/mysql
+skip-external-locking
+collation-server = utf8mb4_unicode_ci
+character-set-server = utf8mb4
+init-connect='SET NAMES utf8mb4'
+
+bind-address = {{ mysql_bind_address }}
+
+{% for mysql_config in mysql_configs %}
+{{ mysql_config.name }} = {{ mysql_config.value }}
+{% endfor %}
+
+log_error = /var/log/mysql/error.log
+
+{% if mysql_repl_role == 'master' %}
+log_bin = mysql-bin
+expire_logs_days = 10
+max_binlog_size = 100M
+
+{% for i in mysql_db %}
+{% if i.replicate|default(1) %}
+binlog_do_db = {{ i.name }}
+{% endif %}
+{% endfor %}
+
+{% for i in mysql_db %}
+{% if not i.replicate|default(1) %}
+binlog_ignore_db = {{ i.name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+!includedir /etc/mysql/conf.d/

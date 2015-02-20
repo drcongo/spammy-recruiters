@@ -1,0 +1,74 @@
+---
+- name: add the 10gen key
+  apt_key: url=http://docs.mongodb.org/10gen-gpg-key.asc state=present
+
+- name: add 10gen apt repository
+  apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present update_cache=yes
+
+- name: Update APT package cache
+  action: apt update_cache=yes
+
+- name: install mongodb
+  apt: pkg=mongodb-10gen state=installed force=yes
+
+- name: Turn on text search
+  lineinfile: dest=/etc/mongodb.conf regexp=^setParameter=textSearchEnabled= line=setParameter=textSearchEnabled=true
+  when: mongo.text_search == True
+
+- name: Turn off auth
+  lineinfile: dest=/etc/mongodb.conf regexp='^(#?)auth(\s?)=' line=#auth=true
+  notify:
+      - restart mongodb
+
+- name: Turn on noauth
+  lineinfile: dest=/etc/mongodb.conf regexp='^(#?)noauth(\s?)=' line=noauth=true
+  notify:
+      - restart mongodb
+
+- name: Bind to localhost
+  lineinfile: dest=/etc/mongodb.conf regexp='^(#?)bind_ip(\s?)=' line=bind_ip=127.0.0.1
+  
+- name: Restart mongo so the conf changes take effect
+  service: name=mongodb state=restarted
+
+- name: Install pip
+  apt: pkg=python-pip state=installed
+
+- name: Install pymongo globally
+  pip: name=pymongo state=present
+
+- name: Create the mongo superuser
+  mongodb_user: user={{ mongo.superuser }} password="{{ mongo.superpassword }}" state=present database=admin
+  when: mongo.superuser is defined
+  notify:
+      - restart mongodb
+
+- name: Add superuser to test database
+  mongodb_user: login_user={{ mongo.superuser }} login_password="{{ mongo.superpassword }}" user={{ mongo.superuser }} password="{{ mongo.superpassword }}" state=present database=test
+  when: mongo.superuser is defined
+  notify:
+      - restart mongodb
+
+- name: Add superuser to the project database
+  mongodb_user: login_user={{ mongo.superuser }} login_password="{{ mongo.superpassword }}" user={{ mongo.superuser }} password="{{ mongo.superpassword }}" state=present database={{ mongo.project_db }}
+  when: mongo.superuser is defined
+  notify:
+      - restart mongodb
+
+- name: Create the {{ mongo.project_db }} mongo user
+  mongodb_user: database={{ mongo.db_name }} user={{ mongo.db_user }} password="{{ mongo.db_pass }}" state=present
+  when: mongo.db_user is defined
+  notify:
+      - restart mongodb
+
+- name: Turn on auth
+  lineinfile: dest=/etc/mongodb.conf regexp='^(#?)auth(\s?)=' line=auth=true
+  when: mongo.superuser is defined
+  notify:
+      - restart mongodb
+
+- name: Turn off noauth
+  lineinfile: dest=/etc/mongodb.conf regexp='^(#?)noauth(\s?)=' line=#noauth=true
+  when: mongo.superuser is defined
+  notify:
+      - restart mongodb
