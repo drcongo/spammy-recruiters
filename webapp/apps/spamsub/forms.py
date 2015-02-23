@@ -1,11 +1,12 @@
-from flask.ext.wtf import (
+from flask_wtf import (
     Form,
+    RecaptchaField
+    )
+from wtforms import (
     StringField,
     SubmitField,
-    Recaptcha,
-    RecaptchaField,
     validators
-)
+    )
 import re
 
 
@@ -27,10 +28,6 @@ class SpammerForm(Form):
     )
     recaptcha = RecaptchaField(
         label=u"ReCaptcha",
-        validators=[Recaptcha(
-            message=u"The ReCaptcha words you entered are wrong. \
-Please try again."
-        )]
     )
 
     submit = SubmitField()

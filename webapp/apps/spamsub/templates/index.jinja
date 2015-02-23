@@ -1,7 +1,7 @@
 {% extends "base.jinja" %}
 {% block content %}
 <div class="row-fluid">
-    <div class="span6 bodycopy">
+    <div class="col-md-6 bodycopy">
         <section>
             <h4>What we're doing</h4>
             <p>
@@ -15,11 +15,11 @@
             <noscript>
                 <p class="alert alert-error">Some stats (such as how fresh our spammer file is) can't be displayed, either because you've turned off JavaScript in your browser, or it doesn't support it.</p>
             </noscript>
-            <p><a class="label" href="{{ url_for('.download') }}">Download spammers.txt</a> <small class="muted">(we'll check for updates first)</small></p>
+            <p><strong><a href="{{ url_for('.download') }}">Download spammers.txt</a></strong> <small class="muted">(we'll check for updates first)</small></p>
             <p>If you'd prefer to send us a pull request, <a id="ghlink" href="https://github.com/drcongo/spammy-recruiters">we're on GitHub</a></p>
         </section>
     </div>
-    <div class="span6" id="FormHolder">
+    <div class="col-md-6" id="FormHolder">
         <section>
             <h4>Add a spammer to the shared database</h4>
             <form id="SpammerForm" method="POST" action="{{ url_for('.index') }}">
