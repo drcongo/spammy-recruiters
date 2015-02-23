@@ -12,9 +12,6 @@
     - role: bootstrap
     - role: nginx
     - role: memcached
-    - {role: mysql, mysql_db: [{name: glyph}],
-                    mysql_users: [{name: glyph, pass: glyph, priv: "*.*:ALL"}],
-      }
     # - role: mongodb
     # - role: nodejs
     # - role: ohmyzsh
@@ -23,4 +20,3 @@
     # - role: rabbitmq
     # - role: rethink
     - role: supervisor
-    - role: elasticsearch
