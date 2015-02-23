@@ -38,7 +38,7 @@
     with_items: postgres
 
   - name: add .pgpass for root user
-    template: src=.pgpass dest=~/.pgpass
+    template: src=.pgpass dest=/root/.pgpass
     sudo: yes
     sudo_user: root
     with_items: postgres
