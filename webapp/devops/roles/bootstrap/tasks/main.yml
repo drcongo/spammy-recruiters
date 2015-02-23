@@ -32,6 +32,10 @@
 - name: update bash to mitigate against shellshock
   command: apt-get --only-upgrade install bash
 
+- git: repo=https://github.com/drcongo/spammy-recruiters.git
+       dest=/vagrant/apps/spamsub/git_dir
+       depth=1
+       remote=origin
 # - name: confirm that the shellshock fix is effective
 #   command: env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
 #   register: command_result
