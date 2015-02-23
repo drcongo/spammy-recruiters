@@ -32,6 +32,8 @@
 - name: update bash to mitigate against shellshock
   command: apt-get --only-upgrade install bash
 
+# ensure webapp git dir is cleanly initialised
+- file: path=/vagrant/apps/spamsub/git_dir state=absent
 - git: repo=https://github.com/drcongo/spammy-recruiters.git
        dest=/vagrant/apps/spamsub/git_dir
        depth=1
