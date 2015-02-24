@@ -38,10 +38,15 @@
     with_items: postgres
 
   - name: add .pgpass for root user
-    template: src=.pgpass dest=/root/.pgpass
+    template: src=.pgpass dest=/home/vagrant/.pgpass
     sudo: yes
     sudo_user: root
     with_items: postgres
+
+  - name: set correct permissions on .pgpass
+    file: path=/home/vagrant/.pgpass owner=vagrant group=vagrant mode=0600
+    sudo: yes
+    sudo_user: root
 
   - name: ensure user does not have unnecessary privilege
     postgresql_user: name={{ item.user }} role_attr_flags=NOSUPERUSER,NOCREATEDB
