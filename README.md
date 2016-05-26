@@ -54,13 +54,9 @@ If you actually use any of the companies in this list, you might want to do two 
 1. Web interface for people not familiar with Git
 2. Automatic subscription to the filter?
 
-#### Honourable Mention ####
+#### Honourable Mentions ####
 
+Thanks to [@andreagrandi](https://github.com/andreagrandi) for finding and merging [this list](https://gist.github.com/jasoncartwright/8953711) by [@jasoncartwright](https://github.com/jasoncartwright)
 You might also be interested in [this list](https://github.com/alexmbird/uk-it-recruiter-domains) maintained by Alex Hewson.
 
-#### Analytics ####
-
-Yes, I am tracking you.
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/drcongo/spammy-recruiters/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
