@@ -118,7 +118,7 @@
 @investigo.co.uk OR 
 @involvedsolutions.com OR 
 @isluk.co.uk OR 
-@isourceit.co.uk OR
+@isourceit.co.uk OR 
 @it-talent.co.uk OR 
 @ithr.com OR 
 @itssrecruitment.co.uk OR 
@@ -249,7 +249,7 @@
 @trg-uk.com OR 
 @ulocate.eu OR 
 @understandingrecruitment.co.uk OR 
-@vantageconsulting.co.uk OR
+@vantageconsulting.co.uk OR 
 @vemployee.com OR 
 @venngroup.com OR 
 @vertex-it-solutions.com OR 
@@ -263,7 +263,7 @@
 @weareaspire.com OR 
 @weareheart.com OR 
 @webpointresources.com OR 
-@webserver.sysexcel.com OR
+@webserver.sysexcel.com OR 
 @welovesalt.com OR 
 @wesourcetalent.com OR 
 @x4group.co.uk OR 
