@@ -18,7 +18,7 @@
 @applauseit.co.uk OR 
 @argyllscott.com OR 
 @arm.co.uk OR 
-@artemissearch.com  OR 
+@artemissearch.com OR 
 @ascentsourcing.com OR 
 @asginternational.co.uk OR 
 @aspexrecruitment.co.uk OR 
@@ -162,6 +162,7 @@
 @mortimerspinks.com OR 
 @multi-programming.com OR 
 @mustardjobs.co.uk OR 
+@myjobmate.co.uk OR
 @navigationrecruitment.co.uk OR 
 @net-recruit.co.uk OR 
 @newgentechnology.co.uk OR 
