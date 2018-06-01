@@ -285,6 +285,7 @@
 @weareadam.com OR 
 @weareaspire.com OR 
 @weareheart.com OR 
+@wearemove.com OR 
 @webpointresources.com OR 
 @webserver.sysexcel.com OR 
 @wegeekit.io OR 
@@ -295,5 +296,4 @@
 @xcede.co.uk OR 
 @xcedesolutions.com OR 
 @yourrecruit.com OR 
-@yourrecruitit.com OR 
-@fullstack.london
+@yourrecruitit.com
